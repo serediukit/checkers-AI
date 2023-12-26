@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.serediuk.checkers.R;
 import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
+import com.serediuk.checkers.util.CheckersDelegate;
 
 import java.util.*;
 
@@ -28,6 +29,8 @@ public class CheckersView extends View {
     private Paint paint;
     private Set<Integer> imagesIds;
     private Map<Integer, Bitmap> bitmaps;
+
+    private CheckersDelegate checkersDelegate = null;
 
 
     public CheckersView(Context context, @Nullable AttributeSet attrs) {
@@ -47,6 +50,10 @@ public class CheckersView extends View {
         }
     }
 
+    public void setCheckersDelegate(CheckersDelegate checkersDelegate) {
+        this.checkersDelegate = checkersDelegate;
+    }
+
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
@@ -58,14 +65,7 @@ public class CheckersView extends View {
         try {
             for (int i = 0; i < ROW; i++) {
                 for (int j = 0; j < COL; j++) {
-                    paint.setColor((i + j) % 2 == 0 ? LIGHT_COLOR : DARK_COLOR);
-                    canvas.drawRect(
-                            i * CELL_SIZE,
-                            j * CELL_SIZE,
-                            i * CELL_SIZE + CELL_SIZE,
-                            j * CELL_SIZE + CELL_SIZE,
-                            paint
-                    );
+                    drawCellAt(canvas, i, j, (i + j) % 2 == 0 ? LIGHT_COLOR : DARK_COLOR);
                 }
             }
         } catch (Exception e) {
@@ -73,11 +73,21 @@ public class CheckersView extends View {
         }
     }
 
+    private void drawCellAt(Canvas canvas, int row, int col, int color) {
+        paint.setColor(color);
+        canvas.drawRect(
+                col * CELL_SIZE,
+                row * CELL_SIZE,
+                col * CELL_SIZE + CELL_SIZE,
+                row * CELL_SIZE + CELL_SIZE,
+                paint
+        );
+    }
+
     private void drawPieces(Canvas canvas) {
-        CheckersModel model = new CheckersModel();
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
-                CheckersPiece piece = model.pieceAt(i, j);
+                CheckersPiece piece = checkersDelegate.pieceAt(i, j);
                 if (piece != null)
                     drawPieceAt(canvas, piece.getImageId(), i, j);
             }

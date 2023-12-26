@@ -2,16 +2,16 @@ package com.serediuk.checkers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 
 import com.serediuk.checkers.model.CheckersModel;
+import com.serediuk.checkers.model.CheckersPiece;
+import com.serediuk.checkers.util.CheckersDelegate;
 import com.serediuk.checkers.view.CheckersView;
 
-public class PlayWithBot extends AppCompatActivity {
+public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
     private final String TAG = "PlayWithBot";
     private CheckersModel checkersModel = new CheckersModel();
 
@@ -25,10 +25,17 @@ public class PlayWithBot extends AppCompatActivity {
         CheckersView checkersView = findViewById(R.id.checkers_deck);
         checkersView.setMinimumHeight(800);
         checkersView.setMinimumWidth(800);
+
+        checkersView.setCheckersDelegate(this);
     }
 
     public void changeTurn(View view) {
         checkersModel.changeTurn();
         Log.d(TAG, checkersModel.toString());
+    }
+
+    @Override
+    public CheckersPiece pieceAt(int row, int col) {
+        return checkersModel.pieceAt(row, col);
     }
 }
