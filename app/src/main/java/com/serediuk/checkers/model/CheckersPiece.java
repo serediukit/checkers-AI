@@ -1,5 +1,8 @@
 package com.serediuk.checkers.model;
 
+import com.serediuk.checkers.model.emuns.PieceRank;
+import com.serediuk.checkers.model.emuns.Player;
+
 public class CheckersPiece {
     private int row;
     private int col;

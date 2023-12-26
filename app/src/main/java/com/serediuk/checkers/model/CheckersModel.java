@@ -1,8 +1,9 @@
 package com.serediuk.checkers.model;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
+
+import com.serediuk.checkers.model.emuns.PieceRank;
+import com.serediuk.checkers.model.emuns.Player;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,24 +12,36 @@ public class CheckersModel {
     private static final int DESC_SIZE = 8;
     private static final int ROWS_COUNT = 3;
 
+    private Player playerTurn;
+    private Player opponentTurn;
     private Set<CheckersPiece> pieces;
 
     public CheckersModel() {
+        playerTurn = Player.WHITE;
+        opponentTurn = Player.BLACK;
+
         pieces = new HashSet<>();
-        reset();
+        initializePieces();
     }
 
-    private void reset() {
+    private void initializePieces() {
         pieces.clear();
         for (int i = 0; i < ROWS_COUNT; i++)
             for (int j = 0; j < DESC_SIZE; j++)
                 if ((i + j) % 2 == 1)
-                    pieces.add(new CheckersPiece(i, j, Player.BLACK, PieceRank.PAWN));
+                    pieces.add(new CheckersPiece(i, j, opponentTurn, PieceRank.PAWN));
 
         for (int i = DESC_SIZE - 1; i >= DESC_SIZE - ROWS_COUNT; i--)
             for (int j = 0; j < DESC_SIZE; j++)
                 if ((i + j) % 2 == 1)
-                    pieces.add(new CheckersPiece(i, j, Player.WHITE, PieceRank.PAWN));
+                    pieces.add(new CheckersPiece(i, j, playerTurn, PieceRank.PAWN));
+    }
+
+    public void changeTurn() {
+        Player temp = playerTurn;
+        playerTurn = opponentTurn;
+        opponentTurn = temp;
+        initializePieces();
     }
 
     private CheckersPiece pieceAt(int row, int col) {

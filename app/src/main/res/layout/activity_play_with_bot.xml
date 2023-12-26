@@ -32,17 +32,93 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="150sp"
         android:orientation="vertical"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:id="@+id/bot_statistic_layout"
-            android:layout_width="300sp"
-            android:layout_height="40sp"
+            android:layout_width="320sp"
+            android:layout_height="50sp"
             android:orientation="horizontal">
 
-            
+            <TextView
+                android:id="@+id/move"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/russo_one"
+                android:text="@string/white_move_title"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/move2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/russo_one"
+                android:text="@string/white_move_title"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"/>
         </LinearLayout>
+
+        <com.serediuk.checkers.view.CheckersView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/checkers_deck"
+            android:layout_width="match_parent"
+            android:layout_height="320sp">
+
+
+        </com.serediuk.checkers.view.CheckersView>
+
+        <LinearLayout
+            android:id="@+id/player_statistic_layout"
+            android:layout_width="320sp"
+            android:layout_height="50sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/move3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/russo_one"
+                android:text="@string/white_move_title"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/move4"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/russo_one"
+                android:text="@string/white_move_title"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_change_turn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10sp"
+            android:backgroundTint="@color/btn_bg_color"
+            android:fontFamily="@font/russo_one"
+            android:onClick="changeTurn"
+            android:text="change turn"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            app:cornerRadius="20sp"
+            app:strokeColor="@color/btn_border_color"
+            app:strokeWidth="2sp"/>
     </LinearLayout>
 </RelativeLayout>

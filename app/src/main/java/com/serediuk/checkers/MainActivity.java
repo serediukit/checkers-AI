@@ -17,12 +17,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void openLevelActivity(View v) {
+    public void openLevelActivity(View view) {
         Intent intent = new Intent(this, LevelActivity.class);
         startActivity(intent);
     }
 
-    public void openPlayWithBotActivity(View v) {
+    public void openPlayWithBotActivity(View view) {
         Intent intent = new Intent(this, PlayWithBot.class);
         startActivity(intent);
     }
