@@ -13,19 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.serediuk.checkers.R;
-import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
 import com.serediuk.checkers.util.CheckersDelegate;
 
 import java.util.*;
 
 public class CheckersView extends View {
-    private final int CELL_SIZE = 100;
     private final int CELL_SPACE = 10;
     private final int ROW = 8;
     private final int COL = 8;
     private final int LIGHT_COLOR = Color.parseColor("#c2b48d");
     private final int DARK_COLOR = Color.parseColor("#292314");
+    private final String ERROR_TAG = "ERROR";
+
+    private int cellSize = 100;
+    private double scale = 1;
     private Paint paint;
     private Set<Integer> imagesIds;
     private Map<Integer, Bitmap> bitmaps;
@@ -59,6 +61,9 @@ public class CheckersView extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         drawDeck(canvas);
         drawPieces(canvas);
+        Log.d("PLAY WITH VOT ACTIVITY", String.valueOf(canvas.getWidth()) + " - " + String.valueOf(canvas.getHeight()));
+        double boardSize = Math.min(canvas.getWidth(), canvas.getHeight()) * scale;
+        cellSize = (int) boardSize / 8;
     }
 
     private void drawDeck(Canvas canvas) {
@@ -69,17 +74,17 @@ public class CheckersView extends View {
                 }
             }
         } catch (Exception e) {
-            Log.e("ERROR", e.getMessage(), e);
+            Log.e(ERROR_TAG, e.getMessage(), e);
         }
     }
 
     private void drawCellAt(Canvas canvas, int row, int col, int color) {
         paint.setColor(color);
         canvas.drawRect(
-                col * CELL_SIZE,
-                row * CELL_SIZE,
-                col * CELL_SIZE + CELL_SIZE,
-                row * CELL_SIZE + CELL_SIZE,
+                col * cellSize,
+                row * cellSize,
+                col * cellSize + cellSize,
+                row * cellSize + cellSize,
                 paint
         );
     }
@@ -101,15 +106,15 @@ public class CheckersView extends View {
                     bitmaps.get(imageId),
                     null,
                     new Rect(
-                            col * CELL_SIZE + CELL_SPACE,
-                            row * CELL_SIZE + CELL_SPACE,
-                            (col + 1) * CELL_SIZE - CELL_SPACE,
-                            (row + 1) * CELL_SIZE - CELL_SPACE
+                            col * cellSize + CELL_SPACE,
+                            row * cellSize + CELL_SPACE,
+                            (col + 1) * cellSize - CELL_SPACE,
+                            (row + 1) * cellSize - CELL_SPACE
                     ),
                     paint
             );
         } catch (Exception e) {
-            Log.e("ERROR", e.getMessage(), e);
+            Log.e(ERROR_TAG, e.getMessage(), e);
         }
     }
 }

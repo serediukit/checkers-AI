@@ -14,6 +14,7 @@ import com.serediuk.checkers.view.CheckersView;
 public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
     private final String TAG = "PlayWithBot";
     private CheckersModel checkersModel = new CheckersModel();
+    private CheckersView checkersView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +23,7 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
 
         Log.d(TAG, checkersModel.toString());
 
-        CheckersView checkersView = findViewById(R.id.checkers_deck);
-        checkersView.setMinimumHeight(800);
-        checkersView.setMinimumWidth(800);
-
+        checkersView = findViewById(R.id.checkers_deck);
         checkersView.setCheckersDelegate(this);
     }
 
