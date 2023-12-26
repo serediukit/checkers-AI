@@ -28,10 +28,7 @@ public class CheckersView extends View {
         try {
             for (int i = 0; i < ROW; i++) {
                 for (int j = 0; j < COL; j++) {
-                    if ((i + j) % 2 == 0)
-                        paint.setColor(Color.BLACK);
-                    else
-                        paint.setColor(Color.WHITE);
+                    paint.setColor((i + j) % 2 == 0 ? Color.WHITE : Color.BLACK);
                     canvas.drawRect(
                             i * CELL_SIZE,
                             j * CELL_SIZE,
