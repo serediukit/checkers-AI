@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    tools:context=".PlayWithBot">
+
+    <TextView
+        android:id="@+id/play_with_bot_screen_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50sp"
+        android:textAlignment="center"
+        android:fontFamily="@font/russo_one"
+        android:text="@string/play_with_bot_name"
+        android:textColor="@color/text_color"
+        android:textSize="40sp"/>
+    <TextView
+        android:id="@+id/move_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100sp"
+        android:textAlignment="center"
+        android:fontFamily="@font/russo_one"
+        android:text="@string/white_move_title"
+        android:textColor="@color/text_color"
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:id="@+id/bot_statistic_layout"
+            android:layout_width="300sp"
+            android:layout_height="40sp"
+            android:orientation="horizontal">
+
+            
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
