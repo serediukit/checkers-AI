@@ -2,6 +2,7 @@ package com.serediuk.checkers.model;
 
 import androidx.annotation.NonNull;
 
+import com.serediuk.checkers.R;
 import com.serediuk.checkers.model.emuns.PieceRank;
 import com.serediuk.checkers.model.emuns.Player;
 
@@ -9,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CheckersModel {
-    private static final int DESC_SIZE = 8;
+    private static final int DECK_SIZE = 8;
     private static final int ROWS_COUNT = 3;
 
     private Player playerTurn;
@@ -26,15 +27,23 @@ public class CheckersModel {
 
     private void initializePieces() {
         pieces.clear();
-        for (int i = 0; i < ROWS_COUNT; i++)
-            for (int j = 0; j < DESC_SIZE; j++)
-                if ((i + j) % 2 == 1)
-                    pieces.add(new CheckersPiece(i, j, opponentTurn, PieceRank.PAWN));
+        for (int i = DECK_SIZE - 1; i >= DECK_SIZE - ROWS_COUNT; i--)
+            for (int j = 0; j < DECK_SIZE; j++)
+                if ((i + j) % 2 == 0)
+                    if (playerTurn == Player.WHITE)
+                        pieces.add(new CheckersPiece(i, j, opponentTurn, PieceRank.PAWN, R.drawable.black));
+                    else
+                        pieces.add(new CheckersPiece(i, j, opponentTurn, PieceRank.PAWN, R.drawable.white));
 
-        for (int i = DESC_SIZE - 1; i >= DESC_SIZE - ROWS_COUNT; i--)
-            for (int j = 0; j < DESC_SIZE; j++)
-                if ((i + j) % 2 == 1)
-                    pieces.add(new CheckersPiece(i, j, playerTurn, PieceRank.PAWN));
+
+
+        for (int i = 0; i < ROWS_COUNT; i++)
+            for (int j = 0; j < DECK_SIZE; j++)
+                if ((i + j) % 2 == 0)
+                    if (playerTurn == Player.WHITE)
+                        pieces.add(new CheckersPiece(i, j, playerTurn, PieceRank.PAWN, R.drawable.white));
+                    else
+                        pieces.add(new CheckersPiece(i, j, playerTurn, PieceRank.PAWN, R.drawable.black));
     }
 
     public void changeTurn() {
@@ -44,7 +53,7 @@ public class CheckersModel {
         initializePieces();
     }
 
-    private CheckersPiece pieceAt(int row, int col) {
+    public CheckersPiece pieceAt(int row, int col) {
         for (CheckersPiece piece : pieces) {
             if (piece.getRow() == row && piece.getCol() == col) {
                 return piece;
@@ -56,23 +65,23 @@ public class CheckersModel {
     @NonNull
     @Override
     public String toString() {
-        String desc = "";
-        for (int i = 0; i < DESC_SIZE; i++) {
-            desc += (char) ('H' - i);
-            for (int j = 0; j < DESC_SIZE; j++) {
+        String deck = "";
+        for (int i = 0; i < DECK_SIZE; i++) {
+            deck += DECK_SIZE - i;
+            for (int j = 0; j < DECK_SIZE; j++) {
                 CheckersPiece piece = pieceAt(i, j);
                 if (piece == null)
-                    desc += " .";
+                    deck += " .";
                 else {
                     if (piece.getPieceRank() == PieceRank.KING)
-                        desc += piece.getPlayer() == Player.WHITE ? " K" : " k";
+                        deck += piece.getPlayer() == Player.WHITE ? " K" : " k";
                     else
-                        desc += piece.getPlayer() == Player.WHITE ? " P" : " p";
+                        deck += piece.getPlayer() == Player.WHITE ? " P" : " p";
                 }
             }
-            desc += "\n";
+            deck += "\n";
         }
-        desc += "  1 2 3 4 5 6 7 8";
-        return desc;
+        deck += "  A B C D E F G H";
+        return deck;
     }
 }

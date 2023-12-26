@@ -8,12 +8,14 @@ public class CheckersPiece {
     private int col;
     private Player player;
     private PieceRank pieceRank;
+    private int imageId;
 
-    public CheckersPiece(int row, int col, Player player, PieceRank pieceRank) {
+    public CheckersPiece(int row, int col, Player player, PieceRank pieceRank, int imageId) {
         this.row = row;
         this.col = col;
         this.player = player;
         this.pieceRank = pieceRank;
+        this.imageId = imageId;
     }
 
     public int getRow() {
@@ -30,5 +32,9 @@ public class CheckersPiece {
 
     public PieceRank getPieceRank() {
         return pieceRank;
+    }
+
+    public int getImageId() {
+        return imageId;
     }
 }
