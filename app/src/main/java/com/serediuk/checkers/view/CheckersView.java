@@ -27,6 +27,7 @@ public class CheckersView extends View {
     private final int LIGHT_COLOR = Color.parseColor("#c2b48d");
     private final int DARK_COLOR = Color.parseColor("#292314");
     private final int MOVES_COLOR = Color.parseColor("#fcba03");
+    private final int TAKE_COLOR = Color.parseColor("#a83720");
     private final String ERROR_TAG = "ERROR";
 
     private int fromRow = -1;
@@ -41,6 +42,7 @@ public class CheckersView extends View {
     private Bitmap movingBitmap = null;
     private CheckersPiece movingPiece = null;
     private ArrayList<BoardCell> correctMoves = null;
+    private ArrayList<BoardCell> takenPieces = null;
 
     private CheckersDelegate checkersDelegate = null;
 
@@ -90,6 +92,7 @@ public class CheckersView extends View {
                     movingY = event.getY();
                     movingBitmap = bitmaps.get(movingPiece.getImageId());
                     correctMoves = checkersDelegate.getCorrectMovesForPiece(movingPiece);
+                    takenPieces = null;
                     invalidate();
                 }
                 break;
@@ -108,6 +111,7 @@ public class CheckersView extends View {
                 correctMoves = null;
                 fromRow = -1;
                 fromCol = -1;
+                takenPieces = checkersDelegate.getTakenPieces();
                 invalidate();
                 break;
         }
@@ -118,8 +122,10 @@ public class CheckersView extends View {
         try {
             for (int i = 0; i < ROW; i++) {
                 for (int j = 0; j < COL; j++) {
-                    if (inArrayList(correctMoves, i, j)) {
+                    if (inArrayList(correctMoves, i, j))
                         drawCellAt(canvas, i, j, MOVES_COLOR);
+                    if (inArrayList(takenPieces, i, j)) {
+                        drawCellAt(canvas, i, j, TAKE_COLOR);
                     }
                     else
                         drawCellAt(canvas, i, j, (i + j) % 2 == 0 ? LIGHT_COLOR : DARK_COLOR);

@@ -17,6 +17,7 @@ import com.serediuk.checkers.util.CheckersDelegate;
 import com.serediuk.checkers.view.CheckersView;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
     private CheckersModel checkersModel = CheckersModel.getInstance();
@@ -77,5 +78,20 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
     @Override
     public ArrayList<BoardCell> getCorrectMovesForPiece(CheckersPiece piece) {
         return checkersModel.getCorrectMovesForPiece(piece);
+    }
+
+    @Override
+    public ArrayList<BoardCell> getTakenPieces() {
+        return checkersModel.getTakenPieces();
+    }
+
+    @Override
+    public int getWhiteCount() {
+        return checkersModel.getWhiteCount();
+    }
+
+    @Override
+    public int getBlackCount() {
+        return checkersModel.getBlackCount();
     }
 }
