@@ -21,9 +21,12 @@ public class CheckersModel {
     private Player opponentTurn;
     private final Set<CheckersPiece> pieces;
 
+    private Player turn;
+
     public CheckersModel() {
         playerTurn = Player.WHITE;
         opponentTurn = Player.BLACK;
+        turn = Player.WHITE;
 
         pieces = new HashSet<>();
         initializePieces();
@@ -74,12 +77,16 @@ public class CheckersModel {
         CheckersPiece pieceToMove = pieceAt(fromRow, fromCol);
         if (pieceToMove == null)
             return false;
+        if (pieceToMove.getPlayer() != turn)
+            return false;
         if (pieceAt(toRow, toCol) != null) {
             return false;
         }
 
         pieceToMove.setRow(toRow);
         pieceToMove.setCol(toCol);
+        // if has more moves don't turn the turns
+        turn = turn == Player.WHITE ? Player.BLACK : Player.WHITE;
 
         if (pieceToMove.getPlayer() == playerTurn)
             if (pieceToMove.getRow() == 0)
