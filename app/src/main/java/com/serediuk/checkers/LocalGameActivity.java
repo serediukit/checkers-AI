@@ -3,8 +3,13 @@ package com.serediuk.checkers;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.serediuk.checkers.model.BoardCell;
@@ -19,13 +24,30 @@ import java.util.ArrayList;
 public class LocalGameActivity extends AppCompatActivity implements CheckersDelegate {
     private CheckersModel checkersModel = CheckersModel.getInstance();
     private CheckersView checkersView;
+    private ImageView playerImageView;
+    private ImageView opponentImageView;
+    private TextView playerScore;
+    private TextView opponentScore;
+    private Bitmap whiteIcon;
+    private Bitmap blackIcon;
+    private boolean playerWhite = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_with_bot);
+        setContentView(R.layout.activity_local_game);
         checkersView = findViewById(R.id.checkers_deck);
         checkersView.setCheckersDelegate(this);
+        whiteIcon = BitmapFactory.decodeResource(getResources(), R.drawable.white);
+        blackIcon = BitmapFactory.decodeResource(getResources(), R.drawable.black);
+        playerImageView = findViewById(R.id.player_image);
+        playerImageView.setImageBitmap(blackIcon);
+        opponentImageView = findViewById(R.id.opponent_image);
+        opponentImageView.setImageBitmap(whiteIcon);
+        playerScore = findViewById(R.id.player_score);
+        playerScore.setText(String.valueOf(12 - getBlackCount()));
+        opponentScore = findViewById(R.id.opponent_score);
+        opponentScore.setText(String.valueOf(12 - getWhiteCount()));
     }
 
     public void changeTurn(View view) {
@@ -36,6 +58,14 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
                 .setPositiveButton("Так", (dialog, which) -> {
                     checkersModel.changeTurn();
                     checkersView.invalidate();
+                    playerWhite = !playerWhite;
+                    if (playerWhite) {
+                        playerImageView.setImageBitmap(blackIcon);
+                        opponentImageView.setImageBitmap(whiteIcon);
+                    } else {
+                        playerImageView.setImageBitmap(whiteIcon);
+                        opponentImageView.setImageBitmap(blackIcon);
+                    }
                 })
                 .setNegativeButton("Ні", (dialog, which) -> {})
                 .show();
@@ -54,6 +84,18 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
                 .show();
     }
 
+    public void startGame(View view) {
+        checkersModel.restart();
+        LinearLayout finishLayout = findViewById(R.id.finish_layout);
+        finishLayout.setVisibility(View.INVISIBLE);
+        Button buttonChange = findViewById(R.id.btn_change_turn);
+        buttonChange.setVisibility(View.VISIBLE);
+        Button buttonRestart = findViewById(R.id.btn_restart);
+        buttonRestart.setVisibility(View.VISIBLE);
+        checkersView.clearLists();
+        checkersView.invalidate();
+    }
+
     @Override
     public CheckersPiece pieceAt(BoardCell cell) {
         return checkersModel.pieceAt(cell);
@@ -63,6 +105,32 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
     public boolean movePiece(BoardCell from, BoardCell to) {
         boolean res = checkersModel.movePiece(from, to);
         ((TextView) findViewById(R.id.turn_title)).setText(getTurn() == Player.WHITE ? R.string.white_move_title : R.string.black_move_title);
+        if (getBlackCount() == 0) {
+            TextView title = findViewById(R.id.finish_win_title);
+            TextView undertitle = findViewById(R.id.finish_win_undertitle);
+            title.setText(R.string.white_win);
+            undertitle.setText(R.string.text_tie);
+            LinearLayout finishLayout = findViewById(R.id.finish_layout);
+            finishLayout.setVisibility(View.VISIBLE);
+            Button buttonChange = findViewById(R.id.btn_change_turn);
+            buttonChange.setVisibility(View.INVISIBLE);
+            Button buttonRestart = findViewById(R.id.btn_restart);
+            buttonRestart.setVisibility(View.INVISIBLE);
+        }
+        if (getWhiteCount() == 0) {
+            TextView title = findViewById(R.id.finish_win_title);
+            TextView undertitle = findViewById(R.id.finish_win_undertitle);
+            title.setText(R.string.black_win);
+            undertitle.setText(R.string.text_tie);
+            LinearLayout finishLayout = findViewById(R.id.finish_layout);
+            finishLayout.setVisibility(View.VISIBLE);
+            Button buttonChange = findViewById(R.id.btn_change_turn);
+            buttonChange.setVisibility(View.INVISIBLE);
+            Button buttonRestart = findViewById(R.id.btn_restart);
+            buttonRestart.setVisibility(View.INVISIBLE);
+        }
+        playerScore.setText(String.valueOf(playerWhite ? (12 - getBlackCount()) : (12 - getWhiteCount())));
+        opponentScore.setText(String.valueOf(playerWhite ? (12 - getWhiteCount()) : (12 - getBlackCount())));
         findViewById(R.id.checkers_deck).invalidate();
         return res;
     }

@@ -5,6 +5,8 @@
 
     <color name="tray_color">#FF000000</color>
     <color name="bg_color">#FF1B201C</color>
+    <color name="bg_color2">#FF37473a</color>
+    <color name="bg_color_dark">#ff1b201c</color>
 
     <color name="btn_bg_color">#FF2E612A</color>
     <color name="btn_border_color">#FFFFFFFF</color>

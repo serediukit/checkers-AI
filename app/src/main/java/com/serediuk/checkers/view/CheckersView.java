@@ -208,4 +208,9 @@ public class CheckersView extends View {
         }
         return false;
     }
+
+    public void clearLists() {
+        lastMoves.clear();
+        takenPieces.clear();
+    }
 }

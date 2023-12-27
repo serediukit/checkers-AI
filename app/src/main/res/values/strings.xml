@@ -1,7 +1,10 @@
 <resources>
+    <string name="empty"> </string>
+
     <string name="app_name">Шашки</string>
     <string name="level_name">Рівень </string>
     <string name="play_with_bot_name">Гра проти бота</string>
+    <string name="play_local_name">Гра локально</string>
 
     <string name="button_play_level_name">Наступний рівень</string>
     <string name="button_play_vs_bot_name">Гра проти ШІ</string>
@@ -9,10 +12,18 @@
     <string name="button_statistic_name">Статистика</string>
     <string name="button_change_turn">Змінити сторону</string>
     <string name="button_restart">Почати спочатку</string>
+    <string name="button_start_new_game">Нова гра</string>
 
     <string name="white_move_title">Хід білих</string>
     <string name="black_move_title">Хід чорних</string>
+    <string name="player_win">Ви перемогли!</string>
+    <string name="player_lose">Ви програли!</string>
+    <string name="white_win">Білі виграли!</string>
+    <string name="black_win">Чорні виграли!</string>
 
+    <string name="text_win">Не варто зупинятись на досягнутому!</string>
+    <string name="text_lose">Не хвилюйтесь, спройте ще раз!</string>
+    <string name="text_tie">Добре те, що добре закінчується</string>
     <string name="text_warning">Попередження</string>
     <string name="text_changing">Ви точно хочете змінити сторону? Ця гра буде врахована як програна.</string>
     <string name="text_restarting">Ви точно хочете почати спочатку? Ця гра буде врахована як програна.</string>
