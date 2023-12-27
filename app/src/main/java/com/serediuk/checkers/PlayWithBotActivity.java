@@ -76,8 +76,8 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
     }
 
     @Override
-    public ArrayList<BoardCell> getCorrectMovesForPiece(CheckersPiece piece) {
-        return checkersModel.getCorrectMovesForPiece(piece);
+    public ArrayList<BoardCell> getHighlightMovesForPiece(CheckersPiece piece) {
+        return checkersModel.getHighlightMovesForPiece(piece);
     }
 
     @Override
@@ -93,5 +93,10 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
     @Override
     public int getBlackCount() {
         return checkersModel.getBlackCount();
+    }
+
+    @Override
+    public ArrayList<BoardCell> getLastMoves() {
+        return checkersModel.getLastMoves();
     }
 }

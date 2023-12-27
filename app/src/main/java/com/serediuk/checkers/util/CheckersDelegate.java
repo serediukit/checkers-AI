@@ -11,8 +11,9 @@ public interface CheckersDelegate {
     public CheckersPiece pieceAt(BoardCell cell);
     public boolean movePiece(BoardCell from, BoardCell to);
     public Player getTurn();
-    public ArrayList<BoardCell> getCorrectMovesForPiece(CheckersPiece piece);
+    public ArrayList<BoardCell> getHighlightMovesForPiece(CheckersPiece piece);
     public ArrayList<BoardCell> getTakenPieces();
+    public ArrayList<BoardCell> getLastMoves();
     public int getWhiteCount();
     public int getBlackCount();
 }

@@ -23,7 +23,9 @@ public class CheckersModel {
     private Player opponentTurn;
     private final Set<CheckersPiece> pieces;
     private final Set<BoardCell> takenPieces;
+    private final ArrayList<BoardCell> lastMoves;
     private CheckersPiece lastMovingPiece = null;
+    private boolean lastMoveWasTake = false;
 
     private Player turn;
 
@@ -34,6 +36,7 @@ public class CheckersModel {
 
         pieces = new HashSet<>();
         takenPieces = new HashSet<>();
+        lastMoves = new ArrayList<>();
         initializePieces();
     }
 
@@ -106,32 +109,23 @@ public class CheckersModel {
             return false;
         if (pieceAt(toRow, toCol) != null)
             return false;
+        if (lastMovingPiece != null && lastMovingPiece != pieceToMove && lastMoveWasTake)
+            return false;
+        if (lastMovingPiece == null)
+            takenPieces.clear();
 
-        ArrayList<Pair<BoardCell, BoardCell>> movesToTake = getAllMovesToTake();
-//        if (movesToTake == null || movesToTake.size() == 0) {
-//            ArrayList<BoardCell> correctMoves = getCorrectMovesForPiece(pieceToMove);
-//            if (containMove(correctMoves, new BoardCell(toRow, toCol))) {
-//                move(pieceToMove, toRow, toCol);
-//                return true;
-//            }
-//        } else {
-//            if (containMove(movesToTake, new BoardCell(toRow, toCol))) {
-//                if (pieceToMove.getPieceRank() == PieceRank.PAWN) {
-//                    int takeRow = (int) (pieceToMove.getPosition().getRow() + toRow) / 2;
-//                    int takeCol = (int) (pieceToMove.getPosition().getCol() + toCol) / 2;
-//                    CheckersPiece takenPiece = pieceAt(takeRow, takeCol);
-//                    takenPieces.add(takenPiece);
-//                    pieces.remove(takenPiece);
-//                    move(pieceToMove, toRow, toCol);
-//                    return true;
-//                }
-//            }
-//        }
-
-        return false;
+        if (canBeTakenMove()) {
+            return makeTakenMove(pieceToMove, toRow, toCol);
+        }
+        return makeMove(pieceToMove, toRow, toCol);
     }
 
     private void move(CheckersPiece pieceToMove, int toRow, int toCol) {
+        if (!lastMoveWasTake) {
+            lastMoves.clear();
+        }
+        lastMoves.add(pieceToMove.getPosition());
+        lastMoves.add(new BoardCell(toRow, toCol));
         pieceToMove.setPosition(toRow, toCol);
 
         if (pieceToMove.getPlayer() == playerTurn)
@@ -141,11 +135,89 @@ public class CheckersModel {
             if (pieceToMove.getPosition().getRow() == DECK_SIZE - 1)
                 makeKing(pieceToMove);
 
-        ArrayList<BoardCell> movesToTake = getMovesToTake(pieceToMove);
-        if (movesToTake == null || movesToTake.size() == 0) {
+
+        if (!lastMoveWasTake || lastMovingPiece == null) {
             turn = turn == Player.WHITE ? Player.BLACK : Player.WHITE;
             lastMovingPiece = null;
+            lastMoveWasTake = false;
+        } else {
+            ArrayList<BoardCell> movesToTake = getMovesToTake(lastMovingPiece);
+            if (movesToTake == null || movesToTake.size() == 0) {
+                turn = turn == Player.WHITE ? Player.BLACK : Player.WHITE;
+                lastMovingPiece = null;
+                lastMoveWasTake = false;
+            }
         }
+    }
+
+    private boolean makeTakenMove(CheckersPiece piece, int toRow, int toCol) {
+        ArrayList<BoardCell> movesToTake = getMovesToTake(piece);
+        if (movesToTake == null || movesToTake.size() == 0)
+            return false;
+
+        if (containMove(movesToTake, new BoardCell(toRow, toCol))) {
+            if (piece.getPieceRank() == PieceRank.PAWN) {
+                int takeRow = (int) (piece.getPosition().getRow() + toRow) / 2;
+                int takeCol = (int) (piece.getPosition().getCol() + toCol) / 2;
+                CheckersPiece takenPiece = pieceAt(takeRow, takeCol);
+                if (takenPiece.getPosition().getRow() != piece.getPosition().getRow()
+                        && takenPiece.getPosition().getCol() != piece.getPosition().getCol()
+                ) {
+                    takenPieces.add(takenPiece.getPosition());
+                    pieces.remove(takenPiece);
+                    if (!lastMoveWasTake) {
+                        lastMoves.clear();
+                    }
+                    lastMoveWasTake = true;
+                    lastMovingPiece = piece;
+                    move(piece, toRow, toCol);
+                    return true;
+                }
+            }
+            if (piece.getPieceRank() == PieceRank.KING) {
+                int takeRow;
+                int takeCol;
+                int kingRow = piece.getPosition().getRow();
+                int kingCol = piece.getPosition().getCol();
+                if (kingRow > toRow)
+                    takeRow = toRow + 1;
+                else
+                    takeRow = toRow - 1;
+                if (kingCol > toCol)
+                    takeCol = toCol + 1;
+                else
+                    takeCol = toCol - 1;
+                CheckersPiece takenPiece = pieceAt(takeRow, takeCol);
+                if (takenPiece.getPosition().getRow() != piece.getPosition().getRow()
+                        && takenPiece.getPosition().getCol() != piece.getPosition().getCol()
+                ) {
+                    takenPieces.add(takenPiece.getPosition());
+                    pieces.remove(takenPiece);
+                    if (!lastMoveWasTake) {
+                        lastMoves.clear();
+                    }
+                    lastMoveWasTake = true;
+                    lastMovingPiece = piece;
+                    move(piece, toRow, toCol);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean makeMove(CheckersPiece piece, int toRow, int toCol) {
+        ArrayList<BoardCell> moves = getCorrectMovesForPiece(piece);
+        if (moves == null || moves.size() == 0)
+            return false;
+
+        if (containMove(moves, new BoardCell(toRow, toCol))) {
+            move(piece, toRow, toCol);
+            lastMoveWasTake = false;
+            lastMovingPiece = piece;
+            return true;
+        }
+        return false;
     }
 
     public CheckersPiece pieceAt(BoardCell cell) {
@@ -174,17 +246,15 @@ public class CheckersModel {
         return turn;
     }
 
-    private ArrayList<Pair<BoardCell, BoardCell>> getAllMovesToTake() {
-        ArrayList<Pair<BoardCell, BoardCell>> allMoves = new ArrayList<>();
+    private boolean canBeTakenMove() {
         for (CheckersPiece piece : pieces) {
             if (piece.getPlayer() == turn) {
                 ArrayList<BoardCell> moves = getMovesToTake(piece);
-                for (BoardCell m : moves) {
-                    allMoves.add(new Pair<>(piece.getPosition(), m));
-                }
+                if (moves != null && moves.size() > 0)
+                    return true;
             }
         }
-        return allMoves;
+        return false;
     }
 
     private ArrayList<BoardCell> getMovesToTake(CheckersPiece piece) {
@@ -209,7 +279,75 @@ public class CheckersModel {
         return movesToTake;
     }
 
-    public ArrayList<BoardCell> getCorrectMovesForPiece(CheckersPiece piece) {
+    private boolean isPawnTakeMove(CheckersPiece pawn, BoardCell take) {
+        int takeRow = (int) (pawn.getPosition().getRow() + take.getRow()) / 2;
+        int takeCol = (int) (pawn.getPosition().getCol() + take.getCol()) / 2;
+        if (takeRow == 0 || takeRow == DECK_SIZE - 1 || takeCol == 0 || takeCol == DECK_SIZE - 1)
+            return false;
+        CheckersPiece takePiece = pieceAt(takeRow, takeCol);
+        if (takePiece == null)
+            return false;
+        return takePiece.getPlayer() != pawn.getPlayer();
+    }
+
+    private boolean isKingTakeMove(CheckersPiece king, BoardCell take) {
+        int kingRow = king.getPosition().getRow();
+        int kingCol = king.getPosition().getCol();
+        int takeRow = take.getRow();
+        int takeCol = take.getCol();
+        if (takeRow == 0 || takeRow == DECK_SIZE - 1 || takeCol == 0 || takeCol == DECK_SIZE - 1)
+            return false;
+        if (Math.abs(kingRow - takeRow) == Math.abs(kingCol - takeCol)) {
+            if (kingRow > takeRow) {
+                if (kingCol > takeCol) {
+                    CheckersPiece nextPiece = pieceAt(takeRow + 1, takeCol + 1);
+                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
+                        for (int i = takeRow + 2; i < kingRow; i++) {
+                            int j = takeCol + i - takeRow;
+                            if (pieceAt(i, j) != null)
+                                return false;
+                        }
+                        return true;
+                    }
+                } else {
+                    CheckersPiece nextPiece = pieceAt(takeRow + 1, takeCol - 1);
+                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
+                        for (int i = takeRow + 2; i < kingRow; i++) {
+                            int j = takeCol - i + takeRow;
+                            if (pieceAt(i, j) != null)
+                                return false;
+                        }
+                        return true;
+                    }
+                }
+            } else {
+                if (kingCol > takeCol) {
+                    CheckersPiece nextPiece = pieceAt(takeRow - 1, takeCol + 1);
+                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
+                        for (int i = takeRow + 2; i < kingRow; i++) {
+                            int j = takeCol + i - takeRow;
+                            if (pieceAt(i, j) != null)
+                                return false;
+                        }
+                        return true;
+                    }
+                } else {
+                    CheckersPiece nextPiece = pieceAt(takeRow - 1, takeCol - 1);
+                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
+                        for (int i = takeRow + 2; i < kingRow; i++) {
+                            int j = takeCol - i + takeRow;
+                            if (pieceAt(i, j) != null)
+                                return false;
+                        }
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private ArrayList<BoardCell> getCorrectMovesForPiece(CheckersPiece piece) {
         if (turn != piece.getPlayer())
             return null;
         ArrayList<BoardCell> allMoves = piece.getAllPossibleMoves();
@@ -219,7 +357,7 @@ public class CheckersModel {
                 if (piece.getPieceRank() == PieceRank.PAWN)
                     if (isPawnMove(piece, move))
                         correctMoves.add(move);
-                else
+                if (piece.getPieceRank() == PieceRank.KING)
                     if (isKingMove(piece, move))
                         correctMoves.add(move);
             }
@@ -227,43 +365,59 @@ public class CheckersModel {
         return correctMoves;
     }
 
-    public boolean containMove(ArrayList<BoardCell> list, BoardCell cell) {
-        if (list == null || list.size() == 0)
-            return false;
-        for (BoardCell l : list) {
-            if (l.getRow() == cell.getRow() && l.getCol() == cell.getCol())
-                return true;
-        }
-        return false;
-    }
-
-    private boolean isPawnTakeMove(CheckersPiece pawn, BoardCell take) {
-        int takeRow = (int) (pawn.getPosition().getRow() + take.getRow()) / 2;
-        int takeCol = (int) (pawn.getPosition().getCol() + take.getCol()) / 2;
-        CheckersPiece takePiece = pieceAt(takeRow, takeCol);
-        if (takePiece == null)
-            return false;
-        if (takePiece.getPlayer() != pawn.getPlayer())
-            return true;
-        return false;
-    }
-
-    private boolean isKingTakeMove(CheckersPiece king, BoardCell take) {
-        return false;
-    }
-
     private boolean isPawnMove(CheckersPiece piece, BoardCell move) {
-        if (playerTurn == piece.getPlayer()) {
-            if (move.getRow() - piece.getPosition().getRow() == -1 && Math.abs(move.getCol() - piece.getPosition().getCol()) == 1)
-                return true;
-        } else {
-            if (move.getRow() - piece.getPosition().getRow() == 1 && Math.abs(move.getCol() - piece.getPosition().getCol()) == 1)
-                return true;
-        }
-        return false;
+        if (playerTurn == piece.getPlayer())
+            return move.getRow() - piece.getPosition().getRow() == -1 && Math.abs(move.getCol() - piece.getPosition().getCol()) == 1;
+        else
+            return move.getRow() - piece.getPosition().getRow() == 1 && Math.abs(move.getCol() - piece.getPosition().getCol()) == 1;
     }
 
     private boolean isKingMove(CheckersPiece king, BoardCell move) {
+        int kingRow = king.getPosition().getRow();
+        int kingCol = king.getPosition().getCol();
+        int moveRow = move.getRow();
+        int moveCol = move.getCol();
+        if (Math.abs(kingRow - moveRow) == Math.abs(kingCol - moveCol)) {
+            if (kingRow > moveRow) {
+                if (kingCol > moveCol) {
+                    for (int i = moveRow + 1; i < kingRow; i++) {
+                        int j = moveCol + i - moveRow;
+                        if (pieceAt(i, j) != null)
+                            return false;
+                    }
+                } else {
+                    for (int i = moveRow + 1; i < kingRow; i++) {
+                        int j = moveCol - i + moveRow;
+                        if (pieceAt(i, j) != null)
+                            return false;
+                    }
+                }
+            } else {
+                if (kingCol > moveCol) {
+                    for (int i = moveRow + 1; i < kingRow; i++) {
+                        int j = moveCol + i - moveRow;
+                        if (pieceAt(i, j) != null)
+                            return false;
+                    }
+                } else {
+                    for (int i = moveRow + 1; i < kingRow; i++) {
+                        int j = moveCol - i + moveRow;
+                        if (pieceAt(i, j) != null)
+                            return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean containMove(ArrayList<BoardCell> list, BoardCell cell) {
+        if (list == null || list.size() == 0)
+            return false;
+        for (BoardCell l : list)
+            if (l.getRow() == cell.getRow() && l.getCol() == cell.getCol())
+                return true;
         return false;
     }
 
@@ -271,26 +425,13 @@ public class CheckersModel {
         return new ArrayList<>(takenPieces);
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        StringBuilder deck = new StringBuilder();
-        for (int i = 0; i < DECK_SIZE; i++) {
-            deck.append(DECK_SIZE - i);
-            for (int j = 0; j < DECK_SIZE; j++) {
-                CheckersPiece piece = pieceAt(i, j);
-                if (piece == null)
-                    deck.append(" .");
-                else {
-                    if (piece.getPieceRank() == PieceRank.KING)
-                        deck.append(piece.getPlayer() == Player.WHITE ? " K" : " k");
-                    else
-                        deck.append(piece.getPlayer() == Player.WHITE ? " P" : " p");
-                }
-            }
-            deck.append("\n");
-        }
-        deck.append("  A B C D E F G H");
-        return deck.toString();
+    public ArrayList<BoardCell> getHighlightMovesForPiece(CheckersPiece piece) {
+        if (canBeTakenMove())
+            return getMovesToTake(piece);
+        return getCorrectMovesForPiece(piece);
+    }
+
+    public ArrayList<BoardCell> getLastMoves() {
+        return lastMoves;
     }
 }

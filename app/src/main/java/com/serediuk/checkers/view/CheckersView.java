@@ -28,6 +28,7 @@ public class CheckersView extends View {
     private final int DARK_COLOR = Color.parseColor("#292314");
     private final int MOVES_COLOR = Color.parseColor("#fcba03");
     private final int TAKE_COLOR = Color.parseColor("#a83720");
+    private final int LAST_MOVE_COLOR = Color.parseColor("#184f26");
     private final String ERROR_TAG = "ERROR";
 
     private int fromRow = -1;
@@ -43,6 +44,7 @@ public class CheckersView extends View {
     private CheckersPiece movingPiece = null;
     private ArrayList<BoardCell> correctMoves = null;
     private ArrayList<BoardCell> takenPieces = null;
+    private ArrayList<BoardCell> lastMoves = null;
 
     private CheckersDelegate checkersDelegate = null;
 
@@ -71,6 +73,8 @@ public class CheckersView extends View {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        takenPieces = checkersDelegate.getTakenPieces();
+        lastMoves = checkersDelegate.getLastMoves();
         drawDeck(canvas);
         drawPieces(canvas);
         double boardSize = Math.min(getWidth(), getHeight()) * scale;
@@ -91,8 +95,7 @@ public class CheckersView extends View {
                     movingX = event.getX();
                     movingY = event.getY();
                     movingBitmap = bitmaps.get(movingPiece.getImageId());
-                    correctMoves = checkersDelegate.getCorrectMovesForPiece(movingPiece);
-                    takenPieces = null;
+                    correctMoves = checkersDelegate.getHighlightMovesForPiece(movingPiece);
                     invalidate();
                 }
                 break;
@@ -111,7 +114,6 @@ public class CheckersView extends View {
                 correctMoves = null;
                 fromRow = -1;
                 fromCol = -1;
-                takenPieces = checkersDelegate.getTakenPieces();
                 invalidate();
                 break;
         }
@@ -124,9 +126,11 @@ public class CheckersView extends View {
                 for (int j = 0; j < COL; j++) {
                     if (inArrayList(correctMoves, i, j))
                         drawCellAt(canvas, i, j, MOVES_COLOR);
-                    if (inArrayList(takenPieces, i, j)) {
+
+                    else if (inArrayList(takenPieces, i, j))
                         drawCellAt(canvas, i, j, TAKE_COLOR);
-                    }
+                    else if (inArrayList(lastMoves, i, j))
+                        drawCellAt(canvas, i, j, LAST_MOVE_COLOR);
                     else
                         drawCellAt(canvas, i, j, (i + j) % 2 == 0 ? LIGHT_COLOR : DARK_COLOR);
                 }
