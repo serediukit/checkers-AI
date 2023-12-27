@@ -22,8 +22,16 @@ public class CheckersPiece {
         return row;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
     public int getCol() {
         return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
     }
 
     public Player getPlayer() {
@@ -34,7 +42,15 @@ public class CheckersPiece {
         return pieceRank;
     }
 
+    public void setPieceRank(PieceRank pieceRank) {
+        this.pieceRank = pieceRank;
+    }
+
     public int getImageId() {
         return imageId;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
     }
 }

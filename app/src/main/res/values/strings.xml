@@ -7,6 +7,8 @@
     <string name="button_play_vs_bot_name">Гра проти ШІ</string>
     <string name="button_play_local_name">Гра локально</string>
     <string name="button_statistic_name">Статистика</string>
+    <string name="button_change_turn">Змінити сторону</string>
+    <string name="button_restart">Почати спочатку</string>
 
     <string name="white_move_title">Хід білих</string>
     <string name="black_move_title">Хід чорних</string>

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -26,11 +27,17 @@ public class CheckersView extends View {
     private final int DARK_COLOR = Color.parseColor("#292314");
     private final String ERROR_TAG = "ERROR";
 
+    private int fromRow = -1;
+    private int fromCol = -1;
+    private double movingX = -1;
+    private double movingY = -1;
     private int cellSize = 100;
     private double scale = 1;
     private Paint paint;
     private Set<Integer> imagesIds;
     private Map<Integer, Bitmap> bitmaps;
+    private Bitmap movingBitmap = null;
+    private CheckersPiece movingPiece = null;
 
     private CheckersDelegate checkersDelegate = null;
 
@@ -61,9 +68,40 @@ public class CheckersView extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         drawDeck(canvas);
         drawPieces(canvas);
-        Log.d("PLAY WITH VOT ACTIVITY", String.valueOf(canvas.getWidth()) + " - " + String.valueOf(canvas.getHeight()));
-        double boardSize = Math.min(canvas.getWidth(), canvas.getHeight()) * scale;
+        double boardSize = Math.min(getWidth(), getHeight()) * scale;
         cellSize = (int) boardSize / 8;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event == null)
+            return false;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                fromCol = (int) (event.getX() / cellSize);
+                fromRow = (int) (event.getY() / cellSize);
+                movingPiece = checkersDelegate.pieceAt(fromRow, fromCol);
+                movingBitmap = bitmaps.get(movingPiece.getImageId());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                movingX = event.getX();
+                movingY = event.getY();
+                Log.d("TAG", "MOVING");
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                int toCol = (int) (event.getX() / cellSize);
+                int toRow = (int) (event.getY() / cellSize);
+                checkersDelegate.movePiece(fromRow, fromCol, toRow, toCol);
+                movingBitmap = null;
+                movingPiece = null;
+                fromRow = -1;
+                fromCol = -1;
+                invalidate();
+                break;
+        }
+        return true;
     }
 
     private void drawDeck(Canvas canvas) {
@@ -94,13 +132,27 @@ public class CheckersView extends View {
             for (int j = 0; j < COL; j++) {
                 CheckersPiece piece = checkersDelegate.pieceAt(i, j);
                 if (piece != null)
-                    drawPieceAt(canvas, piece.getImageId(), i, j);
+                    if (piece != movingPiece)
+                        drawPieceAt(canvas, piece.getImageId(), i, j);
             }
+        }
+
+        if (movingBitmap != null && movingPiece != null) {
+            canvas.drawBitmap(
+                    movingBitmap,
+                    null,
+                    new Rect(
+                            (int) (movingX - cellSize / 2),
+                            (int) (movingY - cellSize / 2),
+                            (int) (movingX + cellSize / 2),
+                            (int) (movingY + cellSize / 2)
+                    ),
+                    paint
+            );
         }
     }
 
     private void drawPieceAt(Canvas canvas, int imageId, int row, int col) {
-        row = ROW - row - 1;
         try {
             canvas.drawBitmap(
                     bitmaps.get(imageId),
