@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.serediuk.checkers.R;
+import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersPiece;
 import com.serediuk.checkers.util.CheckersDelegate;
 
@@ -25,6 +26,7 @@ public class CheckersView extends View {
     private final int COL = 8;
     private final int LIGHT_COLOR = Color.parseColor("#c2b48d");
     private final int DARK_COLOR = Color.parseColor("#292314");
+    private final int MOVES_COLOR = Color.parseColor("#fcba03");
     private final String ERROR_TAG = "ERROR";
 
     private int fromRow = -1;
@@ -38,6 +40,7 @@ public class CheckersView extends View {
     private Map<Integer, Bitmap> bitmaps;
     private Bitmap movingBitmap = null;
     private CheckersPiece movingPiece = null;
+    private ArrayList<BoardCell> correctMoves = null;
 
     private CheckersDelegate checkersDelegate = null;
 
@@ -81,21 +84,28 @@ public class CheckersView extends View {
             case MotionEvent.ACTION_DOWN:
                 fromCol = (int) (event.getX() / cellSize);
                 fromRow = (int) (event.getY() / cellSize);
-                movingPiece = checkersDelegate.pieceAt(fromRow, fromCol);
-                movingBitmap = bitmaps.get(movingPiece.getImageId());
+                movingPiece = checkersDelegate.pieceAt(new BoardCell(fromRow, fromCol));
+                if (movingPiece != null) {
+                    movingX = event.getX();
+                    movingY = event.getY();
+                    movingBitmap = bitmaps.get(movingPiece.getImageId());
+                    correctMoves = checkersDelegate.getCorrectMovesForPiece(movingPiece);
+                    invalidate();
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 movingX = event.getX();
                 movingY = event.getY();
-                Log.d("TAG", "MOVING");
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 int toCol = (int) (event.getX() / cellSize);
                 int toRow = (int) (event.getY() / cellSize);
-                checkersDelegate.movePiece(fromRow, fromCol, toRow, toCol);
+                if (movingPiece != null)
+                    checkersDelegate.movePiece(new BoardCell(fromRow, fromCol), new BoardCell(toRow, toCol));
                 movingBitmap = null;
                 movingPiece = null;
+                correctMoves = null;
                 fromRow = -1;
                 fromCol = -1;
                 invalidate();
@@ -108,7 +118,11 @@ public class CheckersView extends View {
         try {
             for (int i = 0; i < ROW; i++) {
                 for (int j = 0; j < COL; j++) {
-                    drawCellAt(canvas, i, j, (i + j) % 2 == 0 ? LIGHT_COLOR : DARK_COLOR);
+                    if (inArrayList(correctMoves, i, j)) {
+                        drawCellAt(canvas, i, j, MOVES_COLOR);
+                    }
+                    else
+                        drawCellAt(canvas, i, j, (i + j) % 2 == 0 ? LIGHT_COLOR : DARK_COLOR);
                 }
             }
         } catch (Exception e) {
@@ -130,7 +144,7 @@ public class CheckersView extends View {
     private void drawPieces(Canvas canvas) {
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
-                CheckersPiece piece = checkersDelegate.pieceAt(i, j);
+                CheckersPiece piece = checkersDelegate.pieceAt(new BoardCell(i, j));
                 if (piece != null)
                     if (piece != movingPiece)
                         drawPieceAt(canvas, piece.getImageId(), i, j);
@@ -152,10 +166,14 @@ public class CheckersView extends View {
         }
     }
 
+    private void drawPieceAt(Canvas canvas, int imageId, BoardCell cell) {
+        drawPieceAt(canvas, imageId, cell.getRow(), cell.getCol());
+    }
+
     private void drawPieceAt(Canvas canvas, int imageId, int row, int col) {
         try {
             canvas.drawBitmap(
-                    bitmaps.get(imageId),
+                    Objects.requireNonNull(bitmaps.get(imageId)),
                     null,
                     new Rect(
                             col * cellSize + CELL_SPACE,
@@ -168,5 +186,16 @@ public class CheckersView extends View {
         } catch (Exception e) {
             Log.e(ERROR_TAG, e.getMessage(), e);
         }
+    }
+
+    private boolean inArrayList(ArrayList<BoardCell> list, int row, int col) {
+        if (list == null || list.size() == 0)
+            return false;
+        for (BoardCell l : list) {
+            if (l.getRow() == row && l.getCol() == col) {
+                return true;
+            }
+        }
+        return false;
     }
 }

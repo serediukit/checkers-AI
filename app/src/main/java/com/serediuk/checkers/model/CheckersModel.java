@@ -8,6 +8,7 @@ import com.serediuk.checkers.R;
 import com.serediuk.checkers.model.emuns.PieceRank;
 import com.serediuk.checkers.model.emuns.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,9 +46,9 @@ public class CheckersModel {
             for (int j = 0; j < DECK_SIZE; j++)
                 if ((i + j) % 2 == 1)
                     if (playerTurn == Player.WHITE)
-                        pieces.add(new CheckersPiece(i, j, opponentTurn, PieceRank.PAWN, R.drawable.black));
+                        pieces.add(new CheckersPiece(new BoardCell(i, j), opponentTurn, PieceRank.PAWN, R.drawable.black));
                     else
-                        pieces.add(new CheckersPiece(i, j, opponentTurn, PieceRank.PAWN, R.drawable.white));
+                        pieces.add(new CheckersPiece(new BoardCell(i, j), opponentTurn, PieceRank.PAWN, R.drawable.white));
 
 
 
@@ -55,9 +56,9 @@ public class CheckersModel {
             for (int j = 0; j < DECK_SIZE; j++)
                 if ((i + j) % 2 == 1)
                     if (playerTurn == Player.WHITE)
-                        pieces.add(new CheckersPiece(i, j, playerTurn, PieceRank.PAWN, R.drawable.white));
+                        pieces.add(new CheckersPiece(new BoardCell(i, j), playerTurn, PieceRank.PAWN, R.drawable.white));
                     else
-                        pieces.add(new CheckersPiece(i, j, playerTurn, PieceRank.PAWN, R.drawable.black));
+                        pieces.add(new CheckersPiece(new BoardCell(i, j), playerTurn, PieceRank.PAWN, R.drawable.black));
     }
 
     public void changeTurn() {
@@ -69,6 +70,10 @@ public class CheckersModel {
 
     public void restart() {
         initializePieces();
+    }
+
+    public boolean movePiece(BoardCell from, BoardCell to) {
+        return movePiece(from.getRow(), from.getCol(), to.getRow(), to.getCol());
     }
 
     public boolean movePiece(int fromRow, int fromCol, int toRow, int toCol) {
@@ -83,23 +88,30 @@ public class CheckersModel {
             return false;
         }
 
-        pieceToMove.setRow(toRow);
-        pieceToMove.setCol(toCol);
-        // if has more moves don't turn the turns
-        turn = turn == Player.WHITE ? Player.BLACK : Player.WHITE;
+        if (containMove(getCorrectMovesForPiece(pieceToMove), new BoardCell(toRow, toCol))) {
+            pieceToMove.setPosition(toRow, toCol);
+            // change if has no more moves;
+            turn = turn == Player.WHITE ? Player.BLACK : Player.WHITE;
 
-        if (pieceToMove.getPlayer() == playerTurn)
-            if (pieceToMove.getRow() == 0)
-                makeKing(pieceToMove);
-        if (pieceToMove.getPlayer() == opponentTurn)
-            if (pieceToMove.getRow() == DECK_SIZE - 1)
-                makeKing(pieceToMove);
-        return true;
+            if (pieceToMove.getPlayer() == playerTurn)
+                if (pieceToMove.getPosition().getRow() == 0)
+                    makeKing(pieceToMove);
+            if (pieceToMove.getPlayer() == opponentTurn)
+                if (pieceToMove.getPosition().getRow() == DECK_SIZE - 1)
+                    makeKing(pieceToMove);
+            return true;
+        }
+
+        return false;
+    }
+
+    public CheckersPiece pieceAt(BoardCell cell) {
+        return pieceAt(cell.getRow(), cell.getCol());
     }
 
     public CheckersPiece pieceAt(int row, int col) {
         for (CheckersPiece piece : pieces) {
-            if (piece.getRow() == row && piece.getCol() == col) {
+            if (piece.getPosition().getRow() == row && piece.getPosition().getCol() == col) {
                 return piece;
             }
         }
@@ -112,6 +124,34 @@ public class CheckersModel {
                 piece.getPlayer() == Player.WHITE
                         ? R.drawable.white_king
                         : R.drawable.black_king);
+    }
+
+    public Player getTurn() {
+        return turn;
+    }
+
+    public ArrayList<BoardCell> getCorrectMovesForPiece(CheckersPiece piece) {
+        if (turn != piece.getPlayer())
+            return null;
+        ArrayList<BoardCell> allMoves = piece.getAllPossibleMoves();
+        ArrayList<BoardCell> correctMoves = new ArrayList<>();
+        for (BoardCell move : allMoves) {
+            if (pieceAt(move) != null) {
+                continue;
+            }
+            correctMoves.add(move);
+        }
+        return correctMoves;
+    }
+
+    public boolean containMove(ArrayList<BoardCell> list, BoardCell cell) {
+        if (list == null || list.size() == 0)
+            return false;
+        for (BoardCell l : list) {
+            if (l.getRow() == cell.getRow() && l.getCol() == cell.getCol())
+                return true;
+        }
+        return false;
     }
 
     @NonNull

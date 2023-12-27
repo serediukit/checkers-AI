@@ -1,37 +1,35 @@
 package com.serediuk.checkers.model;
 
+import androidx.core.util.Pair;
+
 import com.serediuk.checkers.model.emuns.PieceRank;
 import com.serediuk.checkers.model.emuns.Player;
 
+import java.util.ArrayList;
+
 public class CheckersPiece {
-    private int row;
-    private int col;
+    private BoardCell position;
     private Player player;
     private PieceRank pieceRank;
     private int imageId;
 
-    public CheckersPiece(int row, int col, Player player, PieceRank pieceRank, int imageId) {
-        this.row = row;
-        this.col = col;
+    public CheckersPiece(BoardCell position, Player player, PieceRank pieceRank, int imageId) {
+        this.position = position;
         this.player = player;
         this.pieceRank = pieceRank;
         this.imageId = imageId;
     }
 
-    public int getRow() {
-        return row;
+    public BoardCell getPosition() {
+        return position;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setPosition(BoardCell position) {
+        this.position = position;
     }
 
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
+    public void setPosition(int row, int col) {
+        this.position = new BoardCell(row, col);
     }
 
     public Player getPlayer() {
@@ -52,5 +50,36 @@ public class CheckersPiece {
 
     public void setImageId(int imageId) {
         this.imageId = imageId;
+    }
+
+    public ArrayList<BoardCell> getAllPossibleMoves() {
+        ArrayList<BoardCell> moves = new ArrayList<>();
+        int row = position.getRow();
+        int col = position.getCol();
+        if (pieceRank  == PieceRank.PAWN) {
+            for( int i = -2; i < 3; i++) {
+                if (i == 0)
+                    continue;
+                if (row + i >= 0 && row + i < 8) {
+                    if (col + i >= 0 && col + i < 8)
+                        moves.add(new BoardCell(row + i, col + i));
+                    if (col - i >= 0 && col - i < 8)
+                        moves.add(new BoardCell(row + i, col - i));
+                }
+            }
+        }
+        else {
+            for( int i = -7; i < 8; i++) {
+                if (i == 0)
+                    continue;
+                if (row + i >= 0 && row + i < 8) {
+                    if (col + i >= 0 && col + i < 8)
+                        moves.add(new BoardCell(row + i, col + i));
+                    if (col - i >= 0 && col - i < 8)
+                        moves.add(new BoardCell(row + i, col - i));
+                }
+            }
+        }
+        return moves;
     }
 }
