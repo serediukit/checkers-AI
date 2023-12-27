@@ -25,4 +25,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PlayWithBotActivity.class);
         startActivity(intent);
     }
+
+    public void openLocalGameActivity(View view) {
+        Intent intent = new Intent(this, LocalGameActivity.class);
+        startActivity(intent);
+    }
 }

@@ -66,6 +66,7 @@
             android:layout_marginVertical="5sp"
             android:backgroundTint="@color/btn_bg_color"
             android:fontFamily="@font/russo_one"
+            android:onClick="openLocalGameActivity"
             android:text="@string/button_play_local_name"
             android:textColor="@color/text_color"
             android:textSize="20sp"

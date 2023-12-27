@@ -324,8 +324,8 @@ public class CheckersModel {
                 if (kingCol > takeCol) {
                     CheckersPiece nextPiece = pieceAt(takeRow - 1, takeCol + 1);
                     if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
-                        for (int i = takeRow + 2; i < kingRow; i++) {
-                            int j = takeCol + i - takeRow;
+                        for (int i = takeRow - 2; i > kingRow; i--) {
+                            int j = takeCol - i + takeRow;
                             if (pieceAt(i, j) != null)
                                 return false;
                         }
@@ -334,8 +334,8 @@ public class CheckersModel {
                 } else {
                     CheckersPiece nextPiece = pieceAt(takeRow - 1, takeCol - 1);
                     if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
-                        for (int i = takeRow + 2; i < kingRow; i++) {
-                            int j = takeCol - i + takeRow;
+                        for (int i = takeRow - 2; i > kingRow; i--) {
+                            int j = takeCol + i - takeRow;
                             if (pieceAt(i, j) != null)
                                 return false;
                         }
@@ -394,14 +394,14 @@ public class CheckersModel {
                 }
             } else {
                 if (kingCol > moveCol) {
-                    for (int i = moveRow + 1; i < kingRow; i++) {
-                        int j = moveCol + i - moveRow;
+                    for (int i = moveRow - 1; i > kingRow; i--) {
+                        int j = moveCol - i + moveRow;
                         if (pieceAt(i, j) != null)
                             return false;
                     }
                 } else {
-                    for (int i = moveRow + 1; i < kingRow; i++) {
-                        int j = moveCol - i + moveRow;
+                    for (int i = moveRow - 1; i > kingRow; i--) {
+                        int j = moveCol + i - moveRow;
                         if (pieceAt(i, j) != null)
                             return false;
                     }

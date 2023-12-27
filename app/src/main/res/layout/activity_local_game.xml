@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    tools:context=".PlayWithBotActivity">
-
+    tools:context=".LocalGameActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -155,4 +154,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
