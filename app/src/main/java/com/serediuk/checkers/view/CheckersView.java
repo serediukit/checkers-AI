@@ -45,6 +45,7 @@ public class CheckersView extends View {
     private ArrayList<BoardCell> correctMoves = null;
     private ArrayList<BoardCell> takenPieces = null;
     private ArrayList<BoardCell> lastMoves = null;
+    private ArrayList<BoardCell> testMoves = null;
 
     private CheckersDelegate checkersDelegate = null;
 
@@ -96,6 +97,7 @@ public class CheckersView extends View {
                     movingY = event.getY();
                     movingBitmap = bitmaps.get(movingPiece.getImageId());
                     correctMoves = checkersDelegate.getHighlightMovesForPiece(movingPiece);
+                    testMoves = movingPiece.getAllPossibleMoves();
                     invalidate();
                 }
                 break;
@@ -112,6 +114,7 @@ public class CheckersView extends View {
                 movingBitmap = null;
                 movingPiece = null;
                 correctMoves = null;
+                testMoves = null;
                 fromRow = -1;
                 fromCol = -1;
                 invalidate();
@@ -126,7 +129,8 @@ public class CheckersView extends View {
                 for (int j = 0; j < COL; j++) {
                     if (inArrayList(correctMoves, i, j))
                         drawCellAt(canvas, i, j, MOVES_COLOR);
-
+                    else if (inArrayList(testMoves, i, j))
+                        drawCellAt(canvas, i, j, Color.MAGENTA);
                     else if (inArrayList(takenPieces, i, j))
                         drawCellAt(canvas, i, j, TAKE_COLOR);
                     else if (inArrayList(lastMoves, i, j))

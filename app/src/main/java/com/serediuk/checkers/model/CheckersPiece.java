@@ -68,7 +68,7 @@ public class CheckersPiece {
                 }
             }
         }
-        else {
+        if (pieceRank == PieceRank.KING) {
             for( int i = -7; i < 8; i++) {
                 if (i == 0)
                     continue;

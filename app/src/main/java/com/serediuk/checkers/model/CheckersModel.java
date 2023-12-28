@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CheckersModel {
-    private static CheckersModel instance;
-
     private static final int DECK_SIZE = 8;
     private static final int ROWS_COUNT = 3;
 
@@ -40,14 +38,12 @@ public class CheckersModel {
         initializePieces();
     }
 
-    public static CheckersModel getInstance() {
-        if (instance == null)
-            instance = new CheckersModel();
-
-        return instance;
-    }
-
     private void initializePieces() {
+        takenPieces.clear();
+        lastMoves.clear();
+        lastMovingPiece = null;
+        lastMoveWasTake = false;
+        turn = Player.WHITE;
         pieces.clear();
         for (int i = 0; i < ROWS_COUNT; i++)
             for (int j = 0; j < DECK_SIZE; j++)
@@ -250,6 +246,8 @@ public class CheckersModel {
         for (CheckersPiece piece : pieces) {
             if (piece.getPlayer() == turn) {
                 ArrayList<BoardCell> moves = getMovesToTake(piece);
+                if (moves != null && piece.getPieceRank() == PieceRank.KING)
+                    Log.d("TAG SIZE", String.valueOf(moves.size()));
                 if (moves != null && moves.size() > 0)
                     return true;
             }
@@ -270,6 +268,7 @@ public class CheckersModel {
                     }
                 }
                 if (piece.getPieceRank() == PieceRank.KING) {
+                    Log.d("TAG ISMOVE", String.valueOf(isKingTakeMove(piece, move)) + " " + move.getRow() + " " + move.getCol());
                     if (isKingTakeMove(piece, move)) {
                         movesToTake.add(move);
                     }
@@ -295,8 +294,8 @@ public class CheckersModel {
         int kingCol = king.getPosition().getCol();
         int takeRow = take.getRow();
         int takeCol = take.getCol();
-        if (takeRow == 0 || takeRow == DECK_SIZE - 1 || takeCol == 0 || takeCol == DECK_SIZE - 1)
-            return false;
+//        if (takeRow == 0 || takeRow == DECK_SIZE - 1 || takeCol == 0 || takeCol == DECK_SIZE - 1)
+//            return false;
         if (Math.abs(kingRow - takeRow) == Math.abs(kingCol - takeCol)) {
             if (kingRow > takeRow) {
                 if (kingCol > takeCol) {
@@ -426,8 +425,11 @@ public class CheckersModel {
     }
 
     public ArrayList<BoardCell> getHighlightMovesForPiece(CheckersPiece piece) {
-        if (canBeTakenMove())
+        if (canBeTakenMove()) {
+            Log.d("TAG", "TAKEN");
             return getMovesToTake(piece);
+        }
+        Log.d("TAG", "MOVED");
         return getCorrectMovesForPiece(piece);
     }
 

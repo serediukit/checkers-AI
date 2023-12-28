@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
-    private CheckersModel checkersModel = CheckersModel.getInstance();
+    private CheckersModel checkersModel = new CheckersModel();
     private CheckersView checkersView;
 
     @Override

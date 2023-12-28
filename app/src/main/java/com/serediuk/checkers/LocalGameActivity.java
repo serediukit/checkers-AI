@@ -22,7 +22,7 @@ import com.serediuk.checkers.view.CheckersView;
 import java.util.ArrayList;
 
 public class LocalGameActivity extends AppCompatActivity implements CheckersDelegate {
-    private CheckersModel checkersModel = CheckersModel.getInstance();
+    private CheckersModel checkersModel = new CheckersModel();
     private CheckersView checkersView;
     private ImageView playerImageView;
     private ImageView opponentImageView;
@@ -57,7 +57,6 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
                 .setMessage(R.string.text_changing)
                 .setPositiveButton("Так", (dialog, which) -> {
                     checkersModel.changeTurn();
-                    checkersView.invalidate();
                     playerWhite = !playerWhite;
                     if (playerWhite) {
                         playerImageView.setImageBitmap(blackIcon);
@@ -66,6 +65,13 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
                         playerImageView.setImageBitmap(whiteIcon);
                         opponentImageView.setImageBitmap(blackIcon);
                     }
+                    checkersView.clearLists();
+                    playerScore = findViewById(R.id.player_score);
+                    playerScore.setText(String.valueOf(12 - getBlackCount()));
+                    opponentScore = findViewById(R.id.opponent_score);
+                    opponentScore.setText(String.valueOf(12 - getWhiteCount()));
+                    ((TextView) findViewById(R.id.turn_title)).setText(getTurn() == Player.WHITE ? R.string.white_move_title : R.string.black_move_title);
+                    checkersView.invalidate();
                 })
                 .setNegativeButton("Ні", (dialog, which) -> {})
                 .show();
@@ -78,6 +84,19 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
                 .setMessage(R.string.text_restarting)
                 .setPositiveButton("Так", (dialog, which) -> {
                     checkersModel.restart();
+                    checkersView.clearLists();
+                    if (playerWhite) {
+                        playerScore = findViewById(R.id.player_score);
+                        playerScore.setText(String.valueOf(12 - getBlackCount()));
+                        opponentScore = findViewById(R.id.opponent_score);
+                        opponentScore.setText(String.valueOf(12 - getWhiteCount()));
+                    } else {
+                        playerScore = findViewById(R.id.player_score);
+                        playerScore.setText(String.valueOf(12 - getWhiteCount()));
+                        opponentScore = findViewById(R.id.opponent_score);
+                        opponentScore.setText(String.valueOf(12 - getBlackCount()));
+                    }
+                    ((TextView) findViewById(R.id.turn_title)).setText(getTurn() == Player.WHITE ? R.string.white_move_title : R.string.black_move_title);
                     checkersView.invalidate();
                 })
                 .setNegativeButton("Ні", (dialog, which) -> {})
@@ -85,7 +104,7 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
     }
 
     public void startGame(View view) {
-        checkersModel.restart();
+        checkersModel.changeTurn();
         LinearLayout finishLayout = findViewById(R.id.finish_layout);
         finishLayout.setVisibility(View.INVISIBLE);
         Button buttonChange = findViewById(R.id.btn_change_turn);
@@ -93,6 +112,18 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
         Button buttonRestart = findViewById(R.id.btn_restart);
         buttonRestart.setVisibility(View.VISIBLE);
         checkersView.clearLists();
+        if (playerWhite) {
+            playerScore = findViewById(R.id.player_score);
+            playerScore.setText(String.valueOf(12 - getBlackCount()));
+            opponentScore = findViewById(R.id.opponent_score);
+            opponentScore.setText(String.valueOf(12 - getWhiteCount()));
+        } else {
+            playerScore = findViewById(R.id.player_score);
+            playerScore.setText(String.valueOf(12 - getWhiteCount()));
+            opponentScore = findViewById(R.id.opponent_score);
+            opponentScore.setText(String.valueOf(12 - getBlackCount()));
+        }
+        ((TextView) findViewById(R.id.turn_title)).setText(getTurn() == Player.WHITE ? R.string.white_move_title : R.string.black_move_title);
         checkersView.invalidate();
     }
 
