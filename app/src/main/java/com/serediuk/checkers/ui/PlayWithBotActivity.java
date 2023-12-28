@@ -149,7 +149,10 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
             TextView title = findViewById(R.id.finish_win_title);
             TextView undertitle = findViewById(R.id.finish_win_undertitle);
             title.setText(R.string.white_win);
-            undertitle.setText(R.string.text_tie);
+            if (playerWhite)
+                undertitle.setText(R.string.text_win);
+            else
+                undertitle.setText(R.string.text_lose);
             LinearLayout finishLayout = findViewById(R.id.finish_layout);
             finishLayout.setVisibility(View.VISIBLE);
             Button buttonChange = findViewById(R.id.btn_change_turn);
@@ -161,7 +164,10 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
             TextView title = findViewById(R.id.finish_win_title);
             TextView undertitle = findViewById(R.id.finish_win_undertitle);
             title.setText(R.string.black_win);
-            undertitle.setText(R.string.text_tie);
+            if (playerWhite)
+                undertitle.setText(R.string.text_lose);
+            else
+                undertitle.setText(R.string.text_win);
             LinearLayout finishLayout = findViewById(R.id.finish_layout);
             finishLayout.setVisibility(View.VISIBLE);
             Button buttonChange = findViewById(R.id.btn_change_turn);

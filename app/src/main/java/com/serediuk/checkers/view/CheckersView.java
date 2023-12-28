@@ -73,11 +73,10 @@ public class CheckersView extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         takenPieces = checkersDelegate.getTakenPieces();
         lastMoves = checkersDelegate.getLastMoves();
+        double boardSize = Math.min(getWidth(), getHeight());
+        cellSize = (int) (boardSize / 8);
         drawDeck(canvas);
         drawPieces(canvas);
-        double scale = 1;
-        double boardSize = Math.min(getWidth(), getHeight()) * scale;
-        cellSize = (int) boardSize / 8;
     }
 
     @SuppressLint("ClickableViewAccessibility")
