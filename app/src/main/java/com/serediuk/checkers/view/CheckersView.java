@@ -36,16 +36,13 @@ public class CheckersView extends View {
     private double movingX = -1;
     private double movingY = -1;
     private int cellSize = 100;
-    private double scale = 1;
-    private Paint paint;
-    private Set<Integer> imagesIds;
-    private Map<Integer, Bitmap> bitmaps;
+    private final Paint paint;
+    private final Map<Integer, Bitmap> bitmaps;
     private Bitmap movingBitmap = null;
     private CheckersPiece movingPiece = null;
     private ArrayList<BoardCell> correctMoves = null;
     private ArrayList<BoardCell> takenPieces = null;
     private ArrayList<BoardCell> lastMoves = null;
-    private ArrayList<BoardCell> testMoves = null;
 
     private CheckersDelegate checkersDelegate = null;
 
@@ -53,7 +50,7 @@ public class CheckersView extends View {
     public CheckersView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
-        imagesIds = new HashSet<>(
+        Set<Integer> imagesIds = new HashSet<>(
                 asList(
                         R.drawable.white,
                         R.drawable.white_king,
@@ -78,6 +75,7 @@ public class CheckersView extends View {
         lastMoves = checkersDelegate.getLastMoves();
         drawDeck(canvas);
         drawPieces(canvas);
+        double scale = 1;
         double boardSize = Math.min(getWidth(), getHeight()) * scale;
         cellSize = (int) boardSize / 8;
     }
@@ -97,7 +95,6 @@ public class CheckersView extends View {
                     movingY = event.getY();
                     movingBitmap = bitmaps.get(movingPiece.getImageId());
                     correctMoves = checkersDelegate.getHighlightMovesForPiece(movingPiece);
-                    testMoves = movingPiece.getAllPossibleMoves();
                     invalidate();
                 }
                 break;
@@ -114,7 +111,6 @@ public class CheckersView extends View {
                 movingBitmap = null;
                 movingPiece = null;
                 correctMoves = null;
-                testMoves = null;
                 fromRow = -1;
                 fromCol = -1;
                 invalidate();
@@ -129,8 +125,6 @@ public class CheckersView extends View {
                 for (int j = 0; j < COL; j++) {
                     if (inArrayList(correctMoves, i, j))
                         drawCellAt(canvas, i, j, MOVES_COLOR);
-                    else if (inArrayList(testMoves, i, j))
-                        drawCellAt(canvas, i, j, Color.MAGENTA);
                     else if (inArrayList(takenPieces, i, j))
                         drawCellAt(canvas, i, j, TAKE_COLOR);
                     else if (inArrayList(lastMoves, i, j))
