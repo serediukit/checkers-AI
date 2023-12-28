@@ -1,9 +1,6 @@
 package com.serediuk.checkers.model;
 
 import android.util.Log;
-import android.util.Pair;
-
-import androidx.annotation.NonNull;
 
 import com.serediuk.checkers.R;
 import com.serediuk.checkers.model.emuns.PieceRank;
@@ -153,8 +150,8 @@ public class CheckersModel {
 
         if (containMove(movesToTake, new BoardCell(toRow, toCol))) {
             if (piece.getPieceRank() == PieceRank.PAWN) {
-                int takeRow = (int) (piece.getPosition().getRow() + toRow) / 2;
-                int takeCol = (int) (piece.getPosition().getCol() + toCol) / 2;
+                int takeRow = (piece.getPosition().getRow() + toRow) / 2;
+                int takeCol = (piece.getPosition().getCol() + toCol) / 2;
                 CheckersPiece takenPiece = pieceAt(takeRow, takeCol);
                 if (takenPiece.getPosition().getRow() != piece.getPosition().getRow()
                         && takenPiece.getPosition().getCol() != piece.getPosition().getCol()
@@ -268,7 +265,7 @@ public class CheckersModel {
                     }
                 }
                 if (piece.getPieceRank() == PieceRank.KING) {
-                    Log.d("TAG ISMOVE", String.valueOf(isKingTakeMove(piece, move)) + " " + move.getRow() + " " + move.getCol());
+                    Log.d("TAG IS MOVE", isKingTakeMove(piece, move) + " " + move.getRow() + " " + move.getCol());
                     if (isKingTakeMove(piece, move)) {
                         movesToTake.add(move);
                     }
@@ -435,5 +432,16 @@ public class CheckersModel {
 
     public ArrayList<BoardCell> getLastMoves() {
         return lastMoves;
+    }
+
+    public boolean checkTie() {
+        for (CheckersPiece piece : pieces) {
+            if (piece.getPlayer() == turn) {
+                ArrayList<BoardCell> moves = getHighlightMovesForPiece(piece);
+                if (moves != null && moves.size() > 0)
+                    return false;
+            }
+        }
+        return getWhiteCount() != 0 && getBlackCount() != 0;
     }
 }

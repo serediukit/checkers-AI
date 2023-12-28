@@ -163,6 +163,20 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
         playerScore.setText(String.valueOf(playerWhite ? (12 - getBlackCount()) : (12 - getWhiteCount())));
         opponentScore.setText(String.valueOf(playerWhite ? (12 - getWhiteCount()) : (12 - getBlackCount())));
         findViewById(R.id.checkers_deck).invalidate();
+        if (res) {
+            if (checkersModel.checkTie()) {
+                TextView title = findViewById(R.id.finish_win_title);
+                TextView undertitle = findViewById(R.id.finish_win_undertitle);
+                title.setText(R.string.tie);
+                undertitle.setText(R.string.text_tie);
+                LinearLayout finishLayout = findViewById(R.id.finish_layout);
+                finishLayout.setVisibility(View.VISIBLE);
+                Button buttonChange = findViewById(R.id.btn_change_turn);
+                buttonChange.setVisibility(View.INVISIBLE);
+                Button buttonRestart = findViewById(R.id.btn_restart);
+                buttonRestart.setVisibility(View.INVISIBLE);
+            }
+        }
         return res;
     }
 

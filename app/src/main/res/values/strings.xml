@@ -20,6 +20,7 @@
     <string name="player_lose">Ви програли!</string>
     <string name="white_win">Білі виграли!</string>
     <string name="black_win">Чорні виграли!</string>
+    <string name="tie">Нічия!</string>
 
     <string name="text_win">Не варто зупинятись на досягнутому!</string>
     <string name="text_lose">Не хвилюйтесь, спройте ще раз!</string>
