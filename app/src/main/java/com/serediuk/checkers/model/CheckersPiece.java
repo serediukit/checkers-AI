@@ -1,9 +1,7 @@
 package com.serediuk.checkers.model;
 
-import androidx.core.util.Pair;
-
-import com.serediuk.checkers.model.emuns.PieceRank;
-import com.serediuk.checkers.model.emuns.Player;
+import com.serediuk.checkers.model.enums.PieceRank;
+import com.serediuk.checkers.model.enums.Player;
 
 import java.util.ArrayList;
 

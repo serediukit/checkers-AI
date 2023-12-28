@@ -1,10 +1,12 @@
-package com.serediuk.checkers;
+package com.serediuk.checkers.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.serediuk.checkers.R;
 
 public class MainActivity extends AppCompatActivity {
 

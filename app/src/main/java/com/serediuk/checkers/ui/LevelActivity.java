@@ -1,8 +1,10 @@
-package com.serediuk.checkers;
+package com.serediuk.checkers.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.serediuk.checkers.R;
 
 public class LevelActivity extends AppCompatActivity {
 

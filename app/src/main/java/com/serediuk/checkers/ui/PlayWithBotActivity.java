@@ -1,4 +1,4 @@
-package com.serediuk.checkers;
+package com.serediuk.checkers.ui;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,16 +12,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.serediuk.checkers.R;
 import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
-import com.serediuk.checkers.model.emuns.Player;
+import com.serediuk.checkers.model.enums.Player;
 import com.serediuk.checkers.util.CheckersDelegate;
 import com.serediuk.checkers.view.CheckersView;
 
 import java.util.ArrayList;
 
-public class LocalGameActivity extends AppCompatActivity implements CheckersDelegate {
+public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
     private CheckersModel checkersModel = new CheckersModel();
     private CheckersView checkersView;
     private ImageView playerImageView;
@@ -35,7 +36,7 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_game);
+        setContentView(R.layout.activity_play_with_bot);
         checkersView = findViewById(R.id.checkers_deck);
         checkersView.setCheckersDelegate(this);
         whiteIcon = BitmapFactory.decodeResource(getResources(), R.drawable.white);
@@ -105,6 +106,14 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
 
     public void startGame(View view) {
         checkersModel.changeTurn();
+        playerWhite = !playerWhite;
+        if (playerWhite) {
+            playerImageView.setImageBitmap(blackIcon);
+            opponentImageView.setImageBitmap(whiteIcon);
+        } else {
+            playerImageView.setImageBitmap(whiteIcon);
+            opponentImageView.setImageBitmap(blackIcon);
+        }
         LinearLayout finishLayout = findViewById(R.id.finish_layout);
         finishLayout.setVisibility(View.INVISIBLE);
         Button buttonChange = findViewById(R.id.btn_change_turn);

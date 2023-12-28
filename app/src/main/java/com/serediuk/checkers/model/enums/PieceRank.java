@@ -1,4 +1,4 @@
-package com.serediuk.checkers.model.emuns;
+package com.serediuk.checkers.model.enums;
 
 public enum PieceRank {
     KING,

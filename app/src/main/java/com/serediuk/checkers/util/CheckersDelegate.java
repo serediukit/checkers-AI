@@ -2,10 +2,9 @@ package com.serediuk.checkers.util;
 
 import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersPiece;
-import com.serediuk.checkers.model.emuns.Player;
+import com.serediuk.checkers.model.enums.Player;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public interface CheckersDelegate {
     public CheckersPiece pieceAt(BoardCell cell);

@@ -3,8 +3,8 @@ package com.serediuk.checkers.model;
 import android.util.Log;
 
 import com.serediuk.checkers.R;
-import com.serediuk.checkers.model.emuns.PieceRank;
-import com.serediuk.checkers.model.emuns.Player;
+import com.serediuk.checkers.model.enums.PieceRank;
+import com.serediuk.checkers.model.enums.Player;
 
 import java.util.ArrayList;
 import java.util.HashSet;

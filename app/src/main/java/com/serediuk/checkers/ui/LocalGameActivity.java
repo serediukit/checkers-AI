@@ -1,30 +1,28 @@
-package com.serediuk.checkers;
+package com.serediuk.checkers.ui;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.serediuk.checkers.R;
 import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
-import com.serediuk.checkers.model.emuns.Player;
+import com.serediuk.checkers.model.enums.Player;
 import com.serediuk.checkers.util.CheckersDelegate;
 import com.serediuk.checkers.view.CheckersView;
 
 import java.util.ArrayList;
-import java.util.Set;
 
-public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
+public class LocalGameActivity extends AppCompatActivity implements CheckersDelegate {
     private CheckersModel checkersModel = new CheckersModel();
     private CheckersView checkersView;
     private ImageView playerImageView;
@@ -38,7 +36,7 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_with_bot);
+        setContentView(R.layout.activity_local_game);
         checkersView = findViewById(R.id.checkers_deck);
         checkersView.setCheckersDelegate(this);
         whiteIcon = BitmapFactory.decodeResource(getResources(), R.drawable.white);

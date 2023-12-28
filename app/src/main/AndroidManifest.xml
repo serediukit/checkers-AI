@@ -13,16 +13,20 @@
         android:theme="@style/Theme.Checkers"
         tools:targetApi="31">
         <activity
-            android:name=".LocalGameActivity"
+            android:screenOrientation="fullSensor"
+            android:name=".ui.LocalGameActivity"
             android:exported="false" />
         <activity
-            android:name=".PlayWithBotActivity"
+            android:screenOrientation="fullSensor"
+            android:name=".ui.PlayWithBotActivity"
             android:exported="false" />
         <activity
-            android:name=".LevelActivity"
+            android:screenOrientation="fullSensor"
+            android:name=".ui.LevelActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:screenOrientation="fullSensor"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

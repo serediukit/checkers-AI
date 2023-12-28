@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    tools:context=".LevelActivity">
+    tools:context=".ui.LevelActivity">
 
     <TextView
         android:id="@+id/level_screen_title"
