@@ -21,8 +21,8 @@ import com.serediuk.checkers.util.CheckersDelegate;
 import java.util.*;
 
 public class CheckersView extends View {
-        private final int ROW = 8;
-    private final int COL = 8;
+    protected final int ROW = 8;
+    protected final int COL = 8;
     private final int LIGHT_COLOR = Color.parseColor("#c2b48d");
     private final int DARK_COLOR = Color.parseColor("#292314");
     private final int MOVES_COLOR = Color.parseColor("#fcba03");
@@ -30,17 +30,17 @@ public class CheckersView extends View {
     private final int LAST_MOVE_COLOR = Color.parseColor("#184f26");
     private final String ERROR_TAG = "ERROR";
 
-    private int fromRow = -1;
-    private int fromCol = -1;
-    private double movingX = -1;
-    private double movingY = -1;
+    protected int fromRow = -1;
+    protected int fromCol = -1;
+    protected double movingX = -1;
+    protected double movingY = -1;
     protected int cellSpace = 10;
     protected int cellSize = 100;
-    private final Paint paint;
-    private final Map<Integer, Bitmap> bitmaps;
-    private Bitmap movingBitmap = null;
-    private CheckersPiece movingPiece = null;
-    private ArrayList<BoardCell> correctMoves = null;
+    protected final Paint paint;
+    protected final Map<Integer, Bitmap> bitmaps;
+    protected Bitmap movingBitmap = null;
+    protected CheckersPiece movingPiece = null;
+    protected ArrayList<BoardCell> correctMoves = null;
     private ArrayList<BoardCell> takenPieces = null;
     private ArrayList<BoardCell> lastMoves = null;
 

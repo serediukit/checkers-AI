@@ -29,4 +29,5 @@
     <string name="text_warning">Попередження</string>
     <string name="text_changing">Ви точно хочете змінити сторону? Ця гра буде врахована як програна.</string>
     <string name="text_restarting">Ви точно хочете почати спочатку? Ця гра буде врахована як програна.</string>
+    <string name="level_description">Зробіть правильний хід</string>
 </resources>

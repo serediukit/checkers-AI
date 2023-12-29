@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/russo_one"
-        android:text="@string/level_name"
+        android:text="@string/level_description"
         android:textColor="@color/text_color"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/puzzle_deck"
