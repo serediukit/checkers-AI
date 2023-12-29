@@ -17,15 +17,15 @@ public class CheckersModel {
     private static final int DECK_SIZE = 8;
     private static final int ROWS_COUNT = 3;
 
-    private Player playerTurn;
-    private Player opponentTurn;
-    private final ArrayList<CheckersPiece> pieces;
-    private final ArrayList<BoardCell> takenPieces;
-    private final ArrayList<BoardCell> lastMoves;
+    protected Player playerTurn;
+    protected Player opponentTurn;
+    protected ArrayList<CheckersPiece> pieces;
+    protected ArrayList<BoardCell> takenPieces;
+    protected ArrayList<BoardCell> lastMoves;
     private CheckersPiece lastMovingPiece = null;
     private boolean lastMoveWasTake = false;
 
-    private Player turn;
+    protected Player turn;
 
     public CheckersModel() {
         playerTurn = Player.WHITE;
@@ -38,7 +38,7 @@ public class CheckersModel {
         initializePieces();
     }
 
-    private void initializePieces() {
+    protected void initializePieces() {
         takenPieces.clear();
         lastMoves.clear();
         lastMovingPiece = null;
