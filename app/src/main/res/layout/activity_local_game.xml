@@ -73,10 +73,7 @@
             <com.serediuk.checkers.view.CheckersView
                 android:id="@+id/checkers_deck"
                 android:layout_width="match_parent"
-                android:layout_height="320sp">
-
-
-            </com.serediuk.checkers.view.CheckersView>
+                android:layout_height="320sp" />
 
             <LinearLayout
                 android:id="@+id/player_statistic_layout"

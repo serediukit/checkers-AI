@@ -2,7 +2,7 @@ package com.serediuk.checkers.util;
 
 import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersPiece;
-import com.serediuk.checkers.model.enums.Player;
+import com.serediuk.checkers.enums.Player;
 
 import java.util.ArrayList;
 

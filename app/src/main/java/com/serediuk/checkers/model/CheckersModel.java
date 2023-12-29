@@ -2,9 +2,12 @@ package com.serediuk.checkers.model;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.serediuk.checkers.R;
-import com.serediuk.checkers.model.enums.PieceRank;
-import com.serediuk.checkers.model.enums.Player;
+import com.serediuk.checkers.enums.PieceRank;
+import com.serediuk.checkers.enums.Player;
+import com.serediuk.checkers.util.CheckersHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,8 +19,8 @@ public class CheckersModel {
 
     private Player playerTurn;
     private Player opponentTurn;
-    private final Set<CheckersPiece> pieces;
-    private final Set<BoardCell> takenPieces;
+    private final ArrayList<CheckersPiece> pieces;
+    private final ArrayList<BoardCell> takenPieces;
     private final ArrayList<BoardCell> lastMoves;
     private CheckersPiece lastMovingPiece = null;
     private boolean lastMoveWasTake = false;
@@ -29,8 +32,8 @@ public class CheckersModel {
         opponentTurn = Player.BLACK;
         turn = Player.WHITE;
 
-        pieces = new HashSet<>();
-        takenPieces = new HashSet<>();
+        pieces = new ArrayList<>();
+        takenPieces = new ArrayList<>();
         lastMoves = new ArrayList<>();
         initializePieces();
     }
@@ -42,6 +45,7 @@ public class CheckersModel {
         lastMoveWasTake = false;
         turn = Player.WHITE;
         pieces.clear();
+
         for (int i = 0; i < ROWS_COUNT; i++)
             for (int j = 0; j < DECK_SIZE; j++)
                 if ((i + j) % 2 == 1)
@@ -50,8 +54,6 @@ public class CheckersModel {
                     else
                         pieces.add(new CheckersPiece(new BoardCell(i, j), opponentTurn, PieceRank.PAWN, R.drawable.white));
 
-
-
         for (int i = DECK_SIZE - ROWS_COUNT; i < DECK_SIZE; i++)
             for (int j = 0; j < DECK_SIZE; j++)
                 if ((i + j) % 2 == 1)
@@ -59,6 +61,10 @@ public class CheckersModel {
                         pieces.add(new CheckersPiece(new BoardCell(i, j), playerTurn, PieceRank.PAWN, R.drawable.white));
                     else
                         pieces.add(new CheckersPiece(new BoardCell(i, j), playerTurn, PieceRank.PAWN, R.drawable.black));
+    }
+
+    public ArrayList<CheckersPiece> getPieces() {
+        return pieces;
     }
 
     public int getWhiteCount() {
@@ -239,12 +245,14 @@ public class CheckersModel {
         return turn;
     }
 
+    public Player getPlayerTurn() {
+        return playerTurn;
+    }
+
     private boolean canBeTakenMove() {
         for (CheckersPiece piece : pieces) {
             if (piece.getPlayer() == turn) {
                 ArrayList<BoardCell> moves = getMovesToTake(piece);
-                if (moves != null && piece.getPieceRank() == PieceRank.KING)
-                    Log.d("TAG SIZE", String.valueOf(moves.size()));
                 if (moves != null && moves.size() > 0)
                     return true;
             }
@@ -260,87 +268,18 @@ public class CheckersModel {
         for (BoardCell move : allMoves) {
             if (pieceAt(move) == null) {
                 if (piece.getPieceRank() == PieceRank.PAWN) {
-                    if (isPawnTakeMove(piece, move)) {
+                    if (CheckersHelper.isPawnTakeMove(pieces, piece, move)) {
                         movesToTake.add(move);
                     }
                 }
                 if (piece.getPieceRank() == PieceRank.KING) {
-                    Log.d("TAG IS MOVE", isKingTakeMove(piece, move) + " " + move.getRow() + " " + move.getCol());
-                    if (isKingTakeMove(piece, move)) {
+                    if (CheckersHelper.isKingTakeMove(pieces, piece, move)) {
                         movesToTake.add(move);
                     }
                 }
             }
         }
         return movesToTake;
-    }
-
-    private boolean isPawnTakeMove(CheckersPiece pawn, BoardCell take) {
-        int takeRow = (int) (pawn.getPosition().getRow() + take.getRow()) / 2;
-        int takeCol = (int) (pawn.getPosition().getCol() + take.getCol()) / 2;
-        if (takeRow == 0 || takeRow == DECK_SIZE - 1 || takeCol == 0 || takeCol == DECK_SIZE - 1)
-            return false;
-        CheckersPiece takePiece = pieceAt(takeRow, takeCol);
-        if (takePiece == null)
-            return false;
-        return takePiece.getPlayer() != pawn.getPlayer();
-    }
-
-    private boolean isKingTakeMove(CheckersPiece king, BoardCell take) {
-        int kingRow = king.getPosition().getRow();
-        int kingCol = king.getPosition().getCol();
-        int takeRow = take.getRow();
-        int takeCol = take.getCol();
-//        if (takeRow == 0 || takeRow == DECK_SIZE - 1 || takeCol == 0 || takeCol == DECK_SIZE - 1)
-//            return false;
-        if (Math.abs(kingRow - takeRow) == Math.abs(kingCol - takeCol)) {
-            if (kingRow > takeRow) {
-                if (kingCol > takeCol) {
-                    CheckersPiece nextPiece = pieceAt(takeRow + 1, takeCol + 1);
-                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
-                        for (int i = takeRow + 2; i < kingRow; i++) {
-                            int j = takeCol + i - takeRow;
-                            if (pieceAt(i, j) != null)
-                                return false;
-                        }
-                        return true;
-                    }
-                } else {
-                    CheckersPiece nextPiece = pieceAt(takeRow + 1, takeCol - 1);
-                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
-                        for (int i = takeRow + 2; i < kingRow; i++) {
-                            int j = takeCol - i + takeRow;
-                            if (pieceAt(i, j) != null)
-                                return false;
-                        }
-                        return true;
-                    }
-                }
-            } else {
-                if (kingCol > takeCol) {
-                    CheckersPiece nextPiece = pieceAt(takeRow - 1, takeCol + 1);
-                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
-                        for (int i = takeRow - 2; i > kingRow; i--) {
-                            int j = takeCol - i + takeRow;
-                            if (pieceAt(i, j) != null)
-                                return false;
-                        }
-                        return true;
-                    }
-                } else {
-                    CheckersPiece nextPiece = pieceAt(takeRow - 1, takeCol - 1);
-                    if (nextPiece != null && nextPiece.getPlayer() != king.getPlayer()) {
-                        for (int i = takeRow - 2; i > kingRow; i--) {
-                            int j = takeCol + i - takeRow;
-                            if (pieceAt(i, j) != null)
-                                return false;
-                        }
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     private ArrayList<BoardCell> getCorrectMovesForPiece(CheckersPiece piece) {
@@ -351,61 +290,14 @@ public class CheckersModel {
         for (BoardCell move : allMoves) {
             if (pieceAt(move) == null) {
                 if (piece.getPieceRank() == PieceRank.PAWN)
-                    if (isPawnMove(piece, move))
+                    if (CheckersHelper.isPawnMove(pieces, piece, move, playerTurn))
                         correctMoves.add(move);
                 if (piece.getPieceRank() == PieceRank.KING)
-                    if (isKingMove(piece, move))
+                    if (CheckersHelper.isKingMove(pieces, piece, move))
                         correctMoves.add(move);
             }
         }
         return correctMoves;
-    }
-
-    private boolean isPawnMove(CheckersPiece piece, BoardCell move) {
-        if (playerTurn == piece.getPlayer())
-            return move.getRow() - piece.getPosition().getRow() == -1 && Math.abs(move.getCol() - piece.getPosition().getCol()) == 1;
-        else
-            return move.getRow() - piece.getPosition().getRow() == 1 && Math.abs(move.getCol() - piece.getPosition().getCol()) == 1;
-    }
-
-    private boolean isKingMove(CheckersPiece king, BoardCell move) {
-        int kingRow = king.getPosition().getRow();
-        int kingCol = king.getPosition().getCol();
-        int moveRow = move.getRow();
-        int moveCol = move.getCol();
-        if (Math.abs(kingRow - moveRow) == Math.abs(kingCol - moveCol)) {
-            if (kingRow > moveRow) {
-                if (kingCol > moveCol) {
-                    for (int i = moveRow + 1; i < kingRow; i++) {
-                        int j = moveCol + i - moveRow;
-                        if (pieceAt(i, j) != null)
-                            return false;
-                    }
-                } else {
-                    for (int i = moveRow + 1; i < kingRow; i++) {
-                        int j = moveCol - i + moveRow;
-                        if (pieceAt(i, j) != null)
-                            return false;
-                    }
-                }
-            } else {
-                if (kingCol > moveCol) {
-                    for (int i = moveRow - 1; i > kingRow; i--) {
-                        int j = moveCol - i + moveRow;
-                        if (pieceAt(i, j) != null)
-                            return false;
-                    }
-                } else {
-                    for (int i = moveRow - 1; i > kingRow; i--) {
-                        int j = moveCol + i - moveRow;
-                        if (pieceAt(i, j) != null)
-                            return false;
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     public boolean containMove(ArrayList<BoardCell> list, BoardCell cell) {
@@ -422,11 +314,8 @@ public class CheckersModel {
     }
 
     public ArrayList<BoardCell> getHighlightMovesForPiece(CheckersPiece piece) {
-        if (canBeTakenMove()) {
-            Log.d("TAG", "TAKEN");
+        if (canBeTakenMove())
             return getMovesToTake(piece);
-        }
-        Log.d("TAG", "MOVED");
         return getCorrectMovesForPiece(piece);
     }
 
@@ -443,5 +332,28 @@ public class CheckersModel {
             }
         }
         return getWhiteCount() != 0 && getBlackCount() != 0;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        String res = "";
+        for (int i = 0; i < 8; i++) {
+            String d = "";
+            for (int j = 0; j < 8; j++) {
+                if (pieceAt(i, j) != null) {
+                    if (pieceAt(i, j).getPieceRank() == PieceRank.PAWN) {
+                        d += pieceAt(i, j).getPlayer() == Player.WHITE ? " P" : " p";
+                    }
+                    if (pieceAt(i, j).getPieceRank() == PieceRank.KING) {
+                        d += pieceAt(i, j).getPlayer() == Player.WHITE ? " K" : " k";
+                    }
+                } else {
+                    d += " .";
+                }
+            }
+            res += d + "\n";
+        }
+        return res;
     }
 }

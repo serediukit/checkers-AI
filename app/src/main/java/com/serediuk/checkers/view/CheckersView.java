@@ -71,6 +71,7 @@ public class CheckersView extends View {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        Log.d("a", "Drawing");
         takenPieces = checkersDelegate.getTakenPieces();
         lastMoves = checkersDelegate.getLastMoves();
         double boardSize = Math.min(getWidth(), getHeight());

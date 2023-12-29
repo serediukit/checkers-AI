@@ -1,4 +1,4 @@
-package com.serediuk.checkers.model.enums;
+package com.serediuk.checkers.enums;
 
 public enum Player {
     WHITE,

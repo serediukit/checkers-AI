@@ -5,6 +5,7 @@
     <string name="level_name">Рівень </string>
     <string name="play_with_bot_name">Гра проти бота</string>
     <string name="play_local_name">Гра локально</string>
+    <string name="statistic_name">Статистика</string>
 
     <string name="button_play_level_name">Наступний рівень</string>
     <string name="button_play_vs_bot_name">Гра проти ШІ</string>

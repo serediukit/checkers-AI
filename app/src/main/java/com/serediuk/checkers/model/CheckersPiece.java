@@ -1,7 +1,7 @@
 package com.serediuk.checkers.model;
 
-import com.serediuk.checkers.model.enums.PieceRank;
-import com.serediuk.checkers.model.enums.Player;
+import com.serediuk.checkers.enums.PieceRank;
+import com.serediuk.checkers.enums.Player;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,12 @@ public class CheckersPiece {
         this.player = player;
         this.pieceRank = pieceRank;
         this.imageId = imageId;
+    }
+
+    public CheckersPiece(BoardCell position, Player player, PieceRank pieceRank) {
+        this.position = position;
+        this.player = player;
+        this.pieceRank = pieceRank;
     }
 
     public BoardCell getPosition() {

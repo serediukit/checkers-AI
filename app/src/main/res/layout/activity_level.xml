@@ -15,6 +15,29 @@
         android:text="@string/level_name"
         android:textColor="@color/text_color"
         android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/checkers_deck"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/level_screen_undertitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/russo_one"
+        android:text="@string/level_name"
+        android:textColor="@color/text_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/checkers_deck"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/level_screen_title" />
+
+    <com.serediuk.checkers.view.CheckersView
+        android:id="@+id/checkers_deck"
+        android:layout_width="match_parent"
+        android:layout_height="320sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

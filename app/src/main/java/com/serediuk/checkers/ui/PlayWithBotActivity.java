@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,17 +16,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.serediuk.checkers.R;
+import com.serediuk.checkers.ai.AlphaBetaPruningBot;
 import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
-import com.serediuk.checkers.model.enums.Player;
+import com.serediuk.checkers.enums.Player;
 import com.serediuk.checkers.util.CheckersDelegate;
 import com.serediuk.checkers.view.CheckersView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
-    private CheckersModel checkersModel = new CheckersModel();
+    private final CheckersModel checkersModel = new CheckersModel();
+    private final AlphaBetaPruningBot bot = new AlphaBetaPruningBot();
+    private final int BOT_DEPTH_SEARCHING = 5;
     private CheckersView checkersView;
     private ImageView playerImageView;
     private ImageView opponentImageView;
@@ -72,6 +79,10 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
                     opponentScore = findViewById(R.id.opponent_score);
                     opponentScore.setText(String.valueOf(12 - getWhiteCount()));
                     ((TextView) findViewById(R.id.turn_title)).setText(getTurn() == Player.WHITE ? R.string.white_move_title : R.string.black_move_title);
+                    Player turn = getTurn();
+                    if ((playerWhite && turn == Player.BLACK) || (!playerWhite && turn == Player.WHITE)) {
+                        makeBotMove();
+                    }
                     checkersView.invalidate();
                 })
                 .setNegativeButton("Ні", (dialog, which) -> {})
@@ -98,6 +109,10 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
                         opponentScore.setText(String.valueOf(12 - getBlackCount()));
                     }
                     ((TextView) findViewById(R.id.turn_title)).setText(getTurn() == Player.WHITE ? R.string.white_move_title : R.string.black_move_title);
+                    Player turn = getTurn();
+                    if ((playerWhite && turn == Player.BLACK) || (!playerWhite && turn == Player.WHITE)) {
+                        makeBotMove();
+                    }
                     checkersView.invalidate();
                 })
                 .setNegativeButton("Ні", (dialog, which) -> {})
@@ -133,6 +148,10 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
             opponentScore.setText(String.valueOf(12 - getBlackCount()));
         }
         ((TextView) findViewById(R.id.turn_title)).setText(getTurn() == Player.WHITE ? R.string.white_move_title : R.string.black_move_title);
+        Player turn = getTurn();
+        if ((playerWhite && turn == Player.BLACK) || (!playerWhite && turn == Player.WHITE)) {
+            makeBotMove();
+        }
         checkersView.invalidate();
     }
 
@@ -177,7 +196,6 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
         }
         playerScore.setText(String.valueOf(playerWhite ? (12 - getBlackCount()) : (12 - getWhiteCount())));
         opponentScore.setText(String.valueOf(playerWhite ? (12 - getWhiteCount()) : (12 - getBlackCount())));
-        findViewById(R.id.checkers_deck).invalidate();
         if (res) {
             if (checkersModel.checkTie()) {
                 TextView title = findViewById(R.id.finish_win_title);
@@ -190,6 +208,12 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
                 buttonChange.setVisibility(View.INVISIBLE);
                 Button buttonRestart = findViewById(R.id.btn_restart);
                 buttonRestart.setVisibility(View.INVISIBLE);
+            }
+        }
+        if (getBlackCount() != 0 && getWhiteCount() != 0 && !checkersModel.checkTie()) {
+            Player turn = getTurn();
+            if ((playerWhite && turn == Player.BLACK) || (!playerWhite && turn == Player.WHITE)) {
+                makeBotMove();
             }
         }
         return res;
@@ -223,5 +247,24 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
     @Override
     public ArrayList<BoardCell> getLastMoves() {
         return checkersModel.getLastMoves();
+    }
+
+    private boolean makeBotMove() {
+        boolean hasMoveBeenMaden = false;
+        while (true) {
+            Player turn = getTurn();
+            if ((playerWhite && turn == Player.BLACK) || (!playerWhite && turn == Player.WHITE)) {
+                try {
+                    Pair<BoardCell, BoardCell> botMove = bot.getBestMove(checkersModel.getPieces(), turn, BOT_DEPTH_SEARCHING);
+                    movePiece(botMove.first, botMove.second);
+                    hasMoveBeenMaden = true;
+                    checkersView.invalidate();
+                } catch (Exception ignored) {
+                }
+            } else {
+                break;
+            }
+        }
+        return hasMoveBeenMaden;
     }
 }
