@@ -1,5 +1,6 @@
 package com.serediuk.checkers.util;
 
+import android.util.Log;
 import android.util.Pair;
 
 import com.serediuk.checkers.R;
@@ -14,6 +15,8 @@ public class DatabaseDataInsertion {
         switch (levelNumber) {
             case 1:
                 return getFirstLevel();
+            case 2:
+                return getSecondLevel();
             default:
                 return null;
         }
@@ -29,5 +32,9 @@ public class DatabaseDataInsertion {
         ArrayList<Pair<BoardCell, BoardCell>> correctMoves = new ArrayList<>();
         correctMoves.add(new Pair<>(new BoardCell(5, 0), new BoardCell(3, 2)));
         return new LevelData(levelNumber, pieces, correctMoves);
+    }
+
+    private static LevelData getSecondLevel() {
+        return null;
     }
 }

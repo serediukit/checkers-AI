@@ -2,12 +2,12 @@
     <string name="empty"> </string>
 
     <string name="app_name">Шашки</string>
-    <string name="level_name">Рівень </string>
+    <string name="level_name">Рівень</string>
     <string name="play_with_bot_name">Гра проти бота</string>
     <string name="play_local_name">Гра локально</string>
     <string name="statistic_name">Статистика</string>
 
-    <string name="button_play_level_name">Наступний рівень</string>
+    <string name="button_play_level_name">Рівень</string>
     <string name="button_play_vs_bot_name">Гра проти ШІ</string>
     <string name="button_play_local_name">Гра локально</string>
     <string name="button_statistic_name">Статистика</string>
@@ -16,6 +16,7 @@
     <string name="button_start_new_game">Нова гра</string>
     <string name="button_next_puzzle">Наступний рівень</string>
     <string name="button_restart_puzzle">Почати рівень заново</string>
+    <string name="button_clear_statistic">Скинути статистику</string>
 
     <string name="white_move_title">Хід білих</string>
     <string name="black_move_title">Хід чорних</string>
@@ -36,4 +37,12 @@
     <string name="text_changing">Ви точно хочете змінити сторону? Ця гра буде врахована як програна.</string>
     <string name="text_restarting">Ви точно хочете почати спочатку? Ця гра буде врахована як програна.</string>
     <string name="text_level_description">Зробіть правильний хід</string>
+    <string name="text_statistic_cleared">Статистику очищенно</string>
+
+    <string name="statistic_text_levels_count">Пройдено рівнів</string>
+    <string name="statistic_text_total">Загальна кількість ігор</string>
+    <string name="statistic_text_wins">Виграно рівнів</string>
+    <string name="statistic_text_loses">Програно рівнів</string>
+    <string name="statistic_text_winrate">Відсоток виграшу</string>
+    <string name="statistic_text_lower_moves">Найменша кількість ходів</string>
 </resources>

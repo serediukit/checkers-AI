@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.BadParcelableException;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.serediuk.checkers.util.CheckersHelper;
 import com.serediuk.checkers.util.DatabaseDataInsertion;
 import com.serediuk.checkers.util.LevelLoader;
 import com.serediuk.checkers.util.PuzzleDelegate;
+import com.serediuk.checkers.util.StatisticLoader;
 import com.serediuk.checkers.view.PuzzleView;
 
 import java.util.ArrayList;
@@ -42,8 +44,6 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
-        LevelLoader.preferences = getSharedPreferences("levels", Context.MODE_PRIVATE);
-        LevelLoader.setLevelData(Objects.requireNonNull(DatabaseDataInsertion.getLevelData(1)));
         puzzleView = findViewById(R.id.puzzle_deck);
         puzzleView.setPuzzleDelegate(this);
         levelNumber = LevelLoader.getLevelNumber();
@@ -135,10 +135,25 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
     }
 
     public void restartLevel(View view) {
-
+        LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
+        resultLayout.setVisibility(View.INVISIBLE);
+        levelNumber = LevelLoader.getLevelNumber();
+        puzzleModel = new PuzzleModel(levelNumber, turn);
     }
 
     public void nextLevel(View view) {
-
+        if (StatisticLoader.getLevel() < StatisticLoader.getLevelCount()) {
+            StatisticLoader.setNextLevel();
+            levelNumber = LevelLoader.getLevelNumber();
+            puzzleModel = new PuzzleModel(levelNumber, turn);
+            correctMoves = LevelLoader.getCorrectMoves();
+            TextView title = findViewById(R.id.level_screen_title);
+            title.setText(R.string.level_name);
+            String titleString = (String) title.getText();
+            title.setText(titleString + " " + levelNumber);
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }

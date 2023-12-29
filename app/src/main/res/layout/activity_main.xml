@@ -87,6 +87,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/btn_bg_color"
             android:fontFamily="@font/russo_one"
+            android:onClick="openStatisticActivity"
             android:text="@string/button_statistic_name"
             android:textColor="@color/text_color"
             android:textSize="20sp"

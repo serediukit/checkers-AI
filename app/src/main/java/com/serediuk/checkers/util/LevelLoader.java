@@ -16,7 +16,7 @@ public class LevelLoader {
     public static SharedPreferences preferences;
 
     public static int getLevelNumber() {
-        return 1;
+        return StatisticLoader.getLevel();
     }
 
     public static ArrayList<CheckersPiece> getPieces() {

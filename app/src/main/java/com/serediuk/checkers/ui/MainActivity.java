@@ -2,20 +2,48 @@ package com.serediuk.checkers.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.serediuk.checkers.R;
+import com.serediuk.checkers.util.DatabaseDataInsertion;
+import com.serediuk.checkers.util.LevelLoader;
+import com.serediuk.checkers.util.StatisticLoader;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LevelLoader.preferences = getSharedPreferences("levels", Context.MODE_PRIVATE);
+        StatisticLoader.preferences = getSharedPreferences("statistic", Context.MODE_PRIVATE);
+        boolean needToReloadPreferences = true;
+        if (StatisticLoader.getLevelCount() == 0 || needToReloadPreferences) {
+            StatisticLoader.setLevel(1);
+            StatisticLoader.setLevelCount(1);
+            StatisticLoader.setGamesCount(0);
+            StatisticLoader.setWins(0);
+            StatisticLoader.setLoses(0);
+            StatisticLoader.setLowestMoves(0);
+            int levelCount = StatisticLoader.getLevelCount();
+            for (int i = 1; i <= levelCount; i++) {
+                LevelLoader.setLevelData(Objects.requireNonNull(DatabaseDataInsertion.getLevelData(i)));
+            }
+        }
 
+        Button playLevelButton = findViewById(R.id.btn_play_level);
+        playLevelButton.setText(R.string.button_play_level_name);
+        String playLevelButtonText = playLevelButton.getText().toString();
+        playLevelButton.setText(playLevelButtonText + " " + StatisticLoader.getLevel());
     }
 
     public void openLevelActivity(View view) {
@@ -30,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void openLocalGameActivity(View view) {
         Intent intent = new Intent(this, LocalGameActivity.class);
+        startActivity(intent);
+    }
+
+    public void openStatisticActivity(View view) {
+        Intent intent = new Intent(this, StatisticActivity.class);
         startActivity(intent);
     }
 }
