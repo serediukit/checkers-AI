@@ -1,4 +1,4 @@
-package com.serediuk.checkers.util;
+package com.serediuk.checkers.util.data;
 
 import android.util.Pair;
 

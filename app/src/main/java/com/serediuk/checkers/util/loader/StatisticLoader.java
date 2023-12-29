@@ -1,4 +1,4 @@
-package com.serediuk.checkers.util;
+package com.serediuk.checkers.util.loader;
 
 import android.content.SharedPreferences;
 

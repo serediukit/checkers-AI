@@ -19,9 +19,9 @@ import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersPiece;
 import com.serediuk.checkers.model.PuzzleModel;
 import com.serediuk.checkers.util.CheckersHelper;
-import com.serediuk.checkers.util.LevelLoader;
+import com.serediuk.checkers.util.loader.LevelLoader;
 import com.serediuk.checkers.util.PuzzleDelegate;
-import com.serediuk.checkers.util.StatisticLoader;
+import com.serediuk.checkers.util.loader.StatisticLoader;
 import com.serediuk.checkers.view.PuzzleView;
 
 import java.util.ArrayList;

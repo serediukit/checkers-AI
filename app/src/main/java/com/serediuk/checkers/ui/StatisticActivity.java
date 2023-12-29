@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.serediuk.checkers.R;
-import com.serediuk.checkers.util.StatisticLoader;
+import com.serediuk.checkers.util.loader.StatisticLoader;
 
 public class StatisticActivity extends AppCompatActivity {
 

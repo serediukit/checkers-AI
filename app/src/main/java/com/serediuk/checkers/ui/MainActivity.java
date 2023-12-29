@@ -10,9 +10,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.serediuk.checkers.R;
-import com.serediuk.checkers.util.DataInsertion;
-import com.serediuk.checkers.util.LevelLoader;
-import com.serediuk.checkers.util.StatisticLoader;
+import com.serediuk.checkers.util.data.DataInsertion;
+import com.serediuk.checkers.util.loader.LevelLoader;
+import com.serediuk.checkers.util.loader.StatisticLoader;
 
 import java.util.Objects;
 

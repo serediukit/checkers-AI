@@ -1,11 +1,9 @@
 package com.serediuk.checkers.model;
 
-import android.content.Context;
-
 import com.serediuk.checkers.R;
 import com.serediuk.checkers.enums.PieceRank;
 import com.serediuk.checkers.enums.Player;
-import com.serediuk.checkers.util.LevelLoader;
+import com.serediuk.checkers.util.loader.LevelLoader;
 
 import java.util.ArrayList;
 

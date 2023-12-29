@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -22,11 +20,10 @@ import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
 import com.serediuk.checkers.enums.Player;
 import com.serediuk.checkers.util.CheckersDelegate;
-import com.serediuk.checkers.util.StatisticLoader;
+import com.serediuk.checkers.util.loader.StatisticLoader;
 import com.serediuk.checkers.view.CheckersView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
     private final CheckersModel checkersModel = new CheckersModel();

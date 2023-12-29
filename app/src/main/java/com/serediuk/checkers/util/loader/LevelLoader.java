@@ -1,6 +1,5 @@
-package com.serediuk.checkers.util;
+package com.serediuk.checkers.util.loader;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Pair;
@@ -9,6 +8,8 @@ import com.serediuk.checkers.enums.PieceRank;
 import com.serediuk.checkers.enums.Player;
 import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersPiece;
+import com.serediuk.checkers.util.data.LevelData;
+import com.serediuk.checkers.util.loader.StatisticLoader;
 
 import java.util.ArrayList;
 
