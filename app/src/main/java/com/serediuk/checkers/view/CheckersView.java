@@ -21,8 +21,7 @@ import com.serediuk.checkers.util.CheckersDelegate;
 import java.util.*;
 
 public class CheckersView extends View {
-    private final int CELL_SPACE = 10;
-    private final int ROW = 8;
+        private final int ROW = 8;
     private final int COL = 8;
     private final int LIGHT_COLOR = Color.parseColor("#c2b48d");
     private final int DARK_COLOR = Color.parseColor("#292314");
@@ -35,7 +34,8 @@ public class CheckersView extends View {
     private int fromCol = -1;
     private double movingX = -1;
     private double movingY = -1;
-    private int cellSize = 100;
+    protected int cellSpace = 10;
+    protected int cellSize = 100;
     private final Paint paint;
     private final Map<Integer, Bitmap> bitmaps;
     private Bitmap movingBitmap = null;
@@ -71,11 +71,11 @@ public class CheckersView extends View {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
-        Log.d("a", "Drawing");
         takenPieces = checkersDelegate.getTakenPieces();
         lastMoves = checkersDelegate.getLastMoves();
         double boardSize = Math.min(getWidth(), getHeight());
         cellSize = (int) (boardSize / 8);
+        cellSpace = (int) cellSize / 10;
         drawDeck(canvas);
         drawPieces(canvas);
     }
@@ -119,7 +119,7 @@ public class CheckersView extends View {
         return true;
     }
 
-    private void drawDeck(Canvas canvas) {
+    protected void drawDeck(Canvas canvas) {
         try {
             for (int i = 0; i < ROW; i++) {
                 for (int j = 0; j < COL; j++) {
@@ -138,7 +138,7 @@ public class CheckersView extends View {
         }
     }
 
-    private void drawCellAt(Canvas canvas, int row, int col, int color) {
+    protected void drawCellAt(Canvas canvas, int row, int col, int color) {
         paint.setColor(color);
         canvas.drawRect(
                 col * cellSize,
@@ -149,7 +149,7 @@ public class CheckersView extends View {
         );
     }
 
-    private void drawPieces(Canvas canvas) {
+    protected void drawPieces(Canvas canvas) {
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
                 CheckersPiece piece = checkersDelegate.pieceAt(new BoardCell(i, j));
@@ -174,20 +174,20 @@ public class CheckersView extends View {
         }
     }
 
-    private void drawPieceAt(Canvas canvas, int imageId, BoardCell cell) {
+    protected void drawPieceAt(Canvas canvas, int imageId, BoardCell cell) {
         drawPieceAt(canvas, imageId, cell.getRow(), cell.getCol());
     }
 
-    private void drawPieceAt(Canvas canvas, int imageId, int row, int col) {
+    protected void drawPieceAt(Canvas canvas, int imageId, int row, int col) {
         try {
             canvas.drawBitmap(
                     Objects.requireNonNull(bitmaps.get(imageId)),
                     null,
                     new Rect(
-                            col * cellSize + CELL_SPACE,
-                            row * cellSize + CELL_SPACE,
-                            (col + 1) * cellSize - CELL_SPACE,
-                            (row + 1) * cellSize - CELL_SPACE
+                            col * cellSize + cellSpace,
+                            row * cellSize + cellSpace,
+                            (col + 1) * cellSize - cellSpace,
+                            (row + 1) * cellSize - cellSpace
                     ),
                     paint
             );
@@ -196,7 +196,7 @@ public class CheckersView extends View {
         }
     }
 
-    private boolean inArrayList(ArrayList<BoardCell> list, int row, int col) {
+    protected boolean inArrayList(ArrayList<BoardCell> list, int row, int col) {
         if (list == null || list.size() == 0)
             return false;
         for (BoardCell l : list) {
