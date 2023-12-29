@@ -3,9 +3,7 @@ package com.serediuk.checkers.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.os.BadParcelableException;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -13,24 +11,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.serediuk.checkers.R;
 import com.serediuk.checkers.enums.PieceRank;
 import com.serediuk.checkers.enums.Player;
 import com.serediuk.checkers.model.BoardCell;
-import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
 import com.serediuk.checkers.model.PuzzleModel;
 import com.serediuk.checkers.util.CheckersHelper;
-import com.serediuk.checkers.util.DatabaseDataInsertion;
 import com.serediuk.checkers.util.LevelLoader;
 import com.serediuk.checkers.util.PuzzleDelegate;
 import com.serediuk.checkers.util.StatisticLoader;
 import com.serediuk.checkers.view.PuzzleView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
     private PuzzleModel puzzleModel;
@@ -47,8 +41,10 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
         puzzleView = findViewById(R.id.puzzle_deck);
         puzzleView.setPuzzleDelegate(this);
         levelNumber = LevelLoader.getLevelNumber();
-        puzzleModel = new PuzzleModel(levelNumber, turn);
-        correctMoves = LevelLoader.getCorrectMoves();
+        if (levelNumber <= StatisticLoader.getLevelCount()) {
+            puzzleModel = new PuzzleModel(levelNumber, turn);
+            correctMoves = LevelLoader.getCorrectMoves();
+        }
         TextView title = findViewById(R.id.level_screen_title);
         title.setText(R.string.level_name);
         String titleString = (String) title.getText();
@@ -146,11 +142,14 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
             StatisticLoader.setNextLevel();
             levelNumber = LevelLoader.getLevelNumber();
             puzzleModel = new PuzzleModel(levelNumber, turn);
+            puzzleView.invalidate();
             correctMoves = LevelLoader.getCorrectMoves();
             TextView title = findViewById(R.id.level_screen_title);
             title.setText(R.string.level_name);
             String titleString = (String) title.getText();
             title.setText(titleString + " " + levelNumber);
+            LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
+            resultLayout.setVisibility(View.INVISIBLE);
         } else {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

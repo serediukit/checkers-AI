@@ -22,6 +22,7 @@ import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
 import com.serediuk.checkers.enums.Player;
 import com.serediuk.checkers.util.CheckersDelegate;
+import com.serediuk.checkers.util.StatisticLoader;
 import com.serediuk.checkers.view.CheckersView;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
     private Bitmap whiteIcon;
     private Bitmap blackIcon;
     private boolean playerWhite = true;
+    private int moves = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,9 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
                 .setTitle(R.string.text_warning)
                 .setMessage(R.string.text_changing)
                 .setPositiveButton("Так", (dialog, which) -> {
+                    StatisticLoader.increaseGamesCount();
+                    StatisticLoader.increaseLoses();
+                    moves = 0;
                     checkersModel.changeTurn();
                     playerWhite = !playerWhite;
                     if (playerWhite) {
@@ -95,6 +100,9 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
                 .setTitle(R.string.text_warning)
                 .setMessage(R.string.text_restarting)
                 .setPositiveButton("Так", (dialog, which) -> {
+                    StatisticLoader.increaseGamesCount();
+                    StatisticLoader.increaseLoses();
+                    moves = 0;
                     checkersModel.restart();
                     checkersView.clearLists();
                     if (playerWhite) {
@@ -168,31 +176,48 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
             TextView title = findViewById(R.id.finish_win_title);
             TextView undertitle = findViewById(R.id.finish_win_undertitle);
             title.setText(R.string.white_win);
-            if (playerWhite)
+            if (playerWhite) {
                 undertitle.setText(R.string.text_win);
-            else
+                StatisticLoader.increaseWins();
+            } else {
                 undertitle.setText(R.string.text_lose);
+                StatisticLoader.increaseLoses();
+            }
+            StatisticLoader.increaseGamesCount();
+            if (StatisticLoader.getLowestMoves() == 0 || StatisticLoader.getLowestMoves() > moves)
+                StatisticLoader.setLowestMoves(moves);
+            moves = 0;
             LinearLayout finishLayout = findViewById(R.id.finish_layout);
             finishLayout.setVisibility(View.VISIBLE);
             Button buttonChange = findViewById(R.id.btn_change_turn);
             buttonChange.setVisibility(View.INVISIBLE);
             Button buttonRestart = findViewById(R.id.btn_restart);
             buttonRestart.setVisibility(View.INVISIBLE);
+            return true;
         }
         if (getWhiteCount() == 0) {
             TextView title = findViewById(R.id.finish_win_title);
             TextView undertitle = findViewById(R.id.finish_win_undertitle);
             title.setText(R.string.black_win);
-            if (playerWhite)
+            if (playerWhite) {
                 undertitle.setText(R.string.text_lose);
-            else
+                StatisticLoader.increaseLoses();
+            } else {
                 undertitle.setText(R.string.text_win);
+                StatisticLoader.increaseWins();
+            }
+            StatisticLoader.increaseGamesCount();
+            if (StatisticLoader.getLowestMoves() == 0 || StatisticLoader.getLowestMoves() > moves)
+                StatisticLoader.setLowestMoves(moves);
+            moves = 0;
+            undertitle.setText(R.string.text_win);
             LinearLayout finishLayout = findViewById(R.id.finish_layout);
             finishLayout.setVisibility(View.VISIBLE);
             Button buttonChange = findViewById(R.id.btn_change_turn);
             buttonChange.setVisibility(View.INVISIBLE);
             Button buttonRestart = findViewById(R.id.btn_restart);
             buttonRestart.setVisibility(View.INVISIBLE);
+            return true;
         }
         playerScore.setText(String.valueOf(playerWhite ? (12 - getBlackCount()) : (12 - getWhiteCount())));
         opponentScore.setText(String.valueOf(playerWhite ? (12 - getWhiteCount()) : (12 - getBlackCount())));
@@ -202,12 +227,18 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
                 TextView undertitle = findViewById(R.id.finish_win_undertitle);
                 title.setText(R.string.tie);
                 undertitle.setText(R.string.text_tie);
+                StatisticLoader.increaseWins();
+                StatisticLoader.increaseGamesCount();
+                if (StatisticLoader.getLowestMoves() == 0 || StatisticLoader.getLowestMoves() > moves)
+                    StatisticLoader.setLowestMoves(moves);
+                moves = 0;
                 LinearLayout finishLayout = findViewById(R.id.finish_layout);
                 finishLayout.setVisibility(View.VISIBLE);
                 Button buttonChange = findViewById(R.id.btn_change_turn);
                 buttonChange.setVisibility(View.INVISIBLE);
                 Button buttonRestart = findViewById(R.id.btn_restart);
                 buttonRestart.setVisibility(View.INVISIBLE);
+                return true;
             }
         }
         if (getBlackCount() != 0 && getWhiteCount() != 0 && !checkersModel.checkTie()) {
@@ -265,6 +296,8 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
                 break;
             }
         }
+        if (hasMoveBeenMaden)
+            moves++;
         return hasMoveBeenMaden;
     }
 }
