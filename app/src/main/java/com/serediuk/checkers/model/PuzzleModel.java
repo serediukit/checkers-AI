@@ -1,5 +1,9 @@
 package com.serediuk.checkers.model;
 
+import android.content.Context;
+
+import com.serediuk.checkers.R;
+import com.serediuk.checkers.enums.PieceRank;
 import com.serediuk.checkers.enums.Player;
 import com.serediuk.checkers.util.LevelLoader;
 
@@ -14,14 +18,22 @@ public class PuzzleModel extends CheckersModel {
         this.turn = turn;
         this.levelNumber = levelNumber;
 
-        pieces = new ArrayList<>();
+        pieces = LevelLoader.getPieces();
+        for (CheckersPiece piece : pieces) {
+            if (piece.getPieceRank() == PieceRank.PAWN) {
+                if (piece.getPlayer() == Player.WHITE)
+                    piece.setImageId(R.drawable.white);
+                if (piece.getPlayer() == Player.BLACK)
+                    piece.setImageId(R.drawable.black);
+            }
+            if (piece.getPieceRank() == PieceRank.KING) {
+                if (piece.getPlayer() == Player.WHITE)
+                    piece.setImageId(R.drawable.white_king);
+                if (piece.getPlayer() == Player.BLACK)
+                    piece.setImageId(R.drawable.black_king);
+            }
+        }
         takenPieces = new ArrayList<>();
         lastMoves = new ArrayList<>();
-        initializePieces();
-    }
-
-    @Override
-    protected void initializePieces() {
-        pieces = LevelLoader.getPieces();
     }
 }

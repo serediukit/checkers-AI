@@ -12,11 +12,13 @@ import java.util.ArrayList;
 
 public class AlphaBetaPruningBot implements Bot {
     private int MAX_DEPTH;
+    private Player botTurn;
 
     public Pair<BoardCell, BoardCell> getBestMove(ArrayList<CheckersPiece> pieces, Player turn, int depth) {
         ArrayList<CheckersPiece> newPieces = clonePieces(pieces);
         MAX_DEPTH = depth;
-        int[] result = alphaBeta(newPieces, turn == Player.WHITE ? Player.BLACK : Player.WHITE, Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
+        botTurn = turn;
+        int[] result = alphaBeta(newPieces, turn, Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
         return new Pair<>(new BoardCell(result[1], result[2]), new BoardCell(result[3], result[4]));
     }
 
@@ -34,7 +36,6 @@ public class AlphaBetaPruningBot implements Bot {
     }
 
     private int[] alphaBeta(ArrayList<CheckersPiece> pieces, Player turn, int alpha, int beta, int depth) {
-        turn = turn == Player.WHITE ? Player.BLACK : Player.WHITE;
         if (depth == MAX_DEPTH || isGameOver(pieces, turn)) {
             int evaluation = evaluatePosition(pieces, turn);
             return new int[]{evaluation, -1, -1};
@@ -47,14 +48,13 @@ public class AlphaBetaPruningBot implements Bot {
         int bestMoveRowTo = -1;
         int bestMoveColTo = -1;
 
-        if (turn == Player.BLACK) {
-            // Maximizing player (BLACK)
+        if (turn == botTurn) {
             int maxEval = Integer.MIN_VALUE;
             for (Pair<BoardCell, BoardCell> move : availableMoves) {
                 BoardCell from = move.first;
                 BoardCell to = move.second;
                 ArrayList<CheckersPiece> updatedPieces = makeMove(pieces, from, to);
-                int eval = alphaBeta(updatedPieces, Player.WHITE, alpha, beta, depth + 1)[0];
+                int eval = alphaBeta(updatedPieces, botTurn == Player.WHITE ? Player.BLACK : Player.WHITE, alpha, beta, depth + 1)[0];
 
                 if (eval > maxEval) {
                     maxEval = eval;
@@ -70,13 +70,12 @@ public class AlphaBetaPruningBot implements Bot {
             }
             return new int[]{maxEval, bestMoveRowFrom, bestMoveColFrom, bestMoveRowTo, bestMoveColTo};
         } else {
-            // Minimizing player (WHITE)
             int minEval = Integer.MAX_VALUE;
             for (Pair<BoardCell, BoardCell> move : availableMoves) {
                 BoardCell from = move.first;
                 BoardCell to = move.second;
                 ArrayList<CheckersPiece> updatedPieces = makeMove(pieces, from, to);
-                int eval = alphaBeta(updatedPieces, Player.BLACK, alpha, beta, depth + 1)[0];
+                int eval = alphaBeta(updatedPieces, botTurn == Player.WHITE ? Player.BLACK : Player.WHITE, alpha, beta, depth + 1)[0];
 
                 if (eval < minEval) {
                     minEval = eval;

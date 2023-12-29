@@ -3,7 +3,9 @@ package com.serediuk.checkers.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -17,11 +19,13 @@ import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
 import com.serediuk.checkers.model.PuzzleModel;
+import com.serediuk.checkers.util.DatabaseDataInsertion;
 import com.serediuk.checkers.util.LevelLoader;
 import com.serediuk.checkers.util.PuzzleDelegate;
 import com.serediuk.checkers.view.PuzzleView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
     private PuzzleModel puzzleModel;
@@ -35,16 +39,18 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
+        LevelLoader.preferences = getSharedPreferences("levels", Context.MODE_PRIVATE);
+        LevelLoader.setLevelData(Objects.requireNonNull(DatabaseDataInsertion.getLevelData(1)));
         puzzleView = findViewById(R.id.puzzle_deck);
         puzzleView.setPuzzleDelegate(this);
         levelNumber = LevelLoader.getLevelNumber();
         puzzleModel = new PuzzleModel(levelNumber, turn);
         correctMoves = LevelLoader.getCorrectMoves();
+        Log.d("Tag", correctMoves.toString());
         TextView title = findViewById(R.id.level_screen_title);
         title.setText(R.string.level_name);
         String titleString = (String) title.getText();
         title.setText(titleString + " " + levelNumber);
-
     }
 
     @Override
