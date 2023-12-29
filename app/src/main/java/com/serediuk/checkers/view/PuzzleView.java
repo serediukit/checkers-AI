@@ -27,7 +27,7 @@ public class PuzzleView extends CheckersView {
     protected void onDraw(@NonNull Canvas canvas) {
         double boardSize = Math.min(getWidth(), getHeight());
         cellSize = (int) (boardSize / 8);
-        cellSpace = (int) cellSize / 10;
+        cellSpace = cellSize / 10;
         drawDeck(canvas);
         drawPieces(canvas);
     }

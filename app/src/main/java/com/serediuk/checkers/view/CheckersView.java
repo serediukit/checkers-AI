@@ -75,7 +75,7 @@ public class CheckersView extends View {
         lastMoves = checkersDelegate.getLastMoves();
         double boardSize = Math.min(getWidth(), getHeight());
         cellSize = (int) (boardSize / 8);
-        cellSpace = (int) cellSize / 10;
+        cellSpace = cellSize / 10;
         drawDeck(canvas);
         drawPieces(canvas);
     }
@@ -172,10 +172,6 @@ public class CheckersView extends View {
                     paint
             );
         }
-    }
-
-    protected void drawPieceAt(Canvas canvas, int imageId, BoardCell cell) {
-        drawPieceAt(canvas, imageId, cell.getRow(), cell.getCol());
     }
 
     protected void drawPieceAt(Canvas canvas, int imageId, int row, int col) {

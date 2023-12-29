@@ -145,7 +145,6 @@
         android:layout_width="match_parent"
         android:layout_height="250sp"
         android:background="@color/bg_color2"
-        android:baselineAligned="true"
         android:orientation="vertical"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"

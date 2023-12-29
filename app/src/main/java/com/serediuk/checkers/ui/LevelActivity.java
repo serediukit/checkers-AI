@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.serediuk.checkers.R;
 import com.serediuk.checkers.enums.Player;
@@ -58,9 +62,39 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
         BoardCell fromCorrect = correctMoves.get(levelNumber).first;
         BoardCell toCorrect = correctMoves.get(levelNumber).second;
 
-        return from.getRow() == fromCorrect.getRow()
+        LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
+        TextView resultTitle = findViewById(R.id.puzzle_result_title);
+        TextView resultUndertitle = findViewById(R.id.puzzle_result_undertitle);
+        Button nextButton = findViewById(R.id.btn_puzzle_next_level);
+        resultLayout.setVisibility(View.VISIBLE);
+
+        if (from.getRow() == fromCorrect.getRow()
                 && from.getCol() == fromCorrect.getCol()
                 && to.getRow() == toCorrect.getRow()
-                && to.getCol() == toCorrect.getCol();
+                && to.getCol() == toCorrect.getCol()
+        ) {
+            resultTitle.setText(R.string.win);
+            resultUndertitle.setText(R.string.win_move);
+            nextButton.setVisibility(View.VISIBLE);
+            return true;
+        } else {
+            resultTitle.setText(R.string.lose);
+            resultUndertitle.setText(R.string.lose_move);
+            nextButton.setVisibility(View.INVISIBLE);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean movePiece(BoardCell from, BoardCell to) {
+        return puzzleModel.movePiece(from, to);
+    }
+
+    public void restartLevel(View view) {
+
+    }
+
+    public void nextLevel(View view) {
+
     }
 }

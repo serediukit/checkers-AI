@@ -14,6 +14,8 @@
     <string name="button_change_turn">Змінити сторону</string>
     <string name="button_restart">Почати спочатку</string>
     <string name="button_start_new_game">Нова гра</string>
+    <string name="button_next_puzzle">Наступний рівень</string>
+    <string name="button_restart_puzzle">Почати рівень заново</string>
 
     <string name="white_move_title">Хід білих</string>
     <string name="black_move_title">Хід чорних</string>
@@ -22,6 +24,10 @@
     <string name="white_win">Білі виграли!</string>
     <string name="black_win">Чорні виграли!</string>
     <string name="tie">Нічия!</string>
+    <string name="win">Перемога!</string>
+    <string name="win_move">Ви зробили правильний хід</string>
+    <string name="lose">Поразка...</string>
+    <string name="lose_move">Спробуйте ще раз</string>
 
     <string name="text_win">Не варто зупинятись на досягнутому!</string>
     <string name="text_lose">Не хвилюйтесь, спройте ще раз!</string>
@@ -29,5 +35,5 @@
     <string name="text_warning">Попередження</string>
     <string name="text_changing">Ви точно хочете змінити сторону? Ця гра буде врахована як програна.</string>
     <string name="text_restarting">Ви точно хочете почати спочатку? Ця гра буде врахована як програна.</string>
-    <string name="level_description">Зробіть правильний хід</string>
+    <string name="text_level_description">Зробіть правильний хід</string>
 </resources>

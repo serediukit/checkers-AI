@@ -9,4 +9,5 @@ public interface PuzzleDelegate {
     public CheckersPiece pieceAt(BoardCell cell);
     public ArrayList<BoardCell> getHighlightMovesForPiece(CheckersPiece piece);
     public boolean checkMove(BoardCell from, BoardCell to);
+    public boolean movePiece(BoardCell from, BoardCell to);
 }
