@@ -172,6 +172,16 @@ public class AlphaBetaPruningBot implements Bot {
     }
 
     public int evaluatePosition(ArrayList<CheckersPiece> pieces, Player turn) {
+        if (getBlackCount(pieces) == 0 && turn == Player.WHITE)
+            return Integer.MAX_VALUE;
+        else if (getBlackCount(pieces) == 0 && turn == Player.BLACK)
+            return Integer.MIN_VALUE;
+        else if (getWhiteCount(pieces) == 0 && turn == Player.WHITE)
+            return Integer.MIN_VALUE;
+        else if (getWhiteCount(pieces) == 0 && turn == Player.BLACK)
+            return Integer.MAX_VALUE;
+        else if (isTie(pieces, turn))
+            return 0;
         int eval = 0;
         for (CheckersPiece piece : pieces) {
             int weight = 1;

@@ -25,6 +25,7 @@ public class DatabaseDataInsertion {
         pieces.add(new CheckersPiece(new BoardCell(7, 0), Player.WHITE, PieceRank.PAWN));
         pieces.add(new CheckersPiece(new BoardCell(5, 0), Player.WHITE, PieceRank.PAWN));
         pieces.add(new CheckersPiece(new BoardCell(4, 1), Player.BLACK, PieceRank.KING));
+        pieces.add(new CheckersPiece(new BoardCell(6, 1), Player.BLACK, PieceRank.PAWN));
         ArrayList<Pair<BoardCell, BoardCell>> correctMoves = new ArrayList<>();
         correctMoves.add(new Pair<>(new BoardCell(5, 0), new BoardCell(3, 2)));
         return new LevelData(levelNumber, pieces, correctMoves);
