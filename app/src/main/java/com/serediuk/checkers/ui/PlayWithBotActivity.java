@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.serediuk.checkers.R;
 import com.serediuk.checkers.ai.AlphaBetaPruningBot;
+import com.serediuk.checkers.ai.Bot;
 import com.serediuk.checkers.model.BoardCell;
 import com.serediuk.checkers.model.CheckersModel;
 import com.serediuk.checkers.model.CheckersPiece;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 
 public class PlayWithBotActivity extends AppCompatActivity implements CheckersDelegate {
     private final CheckersModel checkersModel = new CheckersModel();
-    private final AlphaBetaPruningBot bot = new AlphaBetaPruningBot();
+    private final Bot bot = new AlphaBetaPruningBot();
     private final int BOT_DEPTH_SEARCHING = 5;
     private CheckersView checkersView;
     private ImageView playerImageView;
@@ -176,13 +177,14 @@ public class PlayWithBotActivity extends AppCompatActivity implements CheckersDe
             if (playerWhite) {
                 undertitle.setText(R.string.text_win);
                 StatisticLoader.increaseWins();
+                if (StatisticLoader.getLowestMoves() == 0 || StatisticLoader.getLowestMoves() > moves)
+                    StatisticLoader.setLowestMoves(moves);
             } else {
                 undertitle.setText(R.string.text_lose);
                 StatisticLoader.increaseLoses();
             }
             StatisticLoader.increaseGamesCount();
-            if (StatisticLoader.getLowestMoves() == 0 || StatisticLoader.getLowestMoves() > moves)
-                StatisticLoader.setLowestMoves(moves);
+
             moves = 0;
             LinearLayout finishLayout = findViewById(R.id.finish_layout);
             finishLayout.setVisibility(View.VISIBLE);

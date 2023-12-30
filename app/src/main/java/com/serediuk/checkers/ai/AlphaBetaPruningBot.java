@@ -1,5 +1,6 @@
 package com.serediuk.checkers.ai;
 
+import android.util.Log;
 import android.util.Pair;
 
 import com.serediuk.checkers.model.BoardCell;
@@ -9,6 +10,7 @@ import com.serediuk.checkers.enums.Player;
 import com.serediuk.checkers.util.CheckersHelper;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AlphaBetaPruningBot implements Bot {
     private int MAX_DEPTH;
@@ -158,10 +160,62 @@ public class AlphaBetaPruningBot implements Bot {
 
     private ArrayList<CheckersPiece> makeMove(ArrayList<CheckersPiece> pieces, BoardCell from, BoardCell to) {
         ArrayList<CheckersPiece> newPieces = clonePieces(pieces);
+        boolean takeWasMaden = false;
+        CheckersPiece takenPiece = null;
         for (CheckersPiece piece : newPieces) {
             if (isEqualPosition(piece, from)) {
+                if (piece.getPieceRank() == PieceRank.PAWN) {
+                    if (CheckersHelper.isPawnTakeMove(pieces, piece, to)) {
+                        piece.setPosition(to);
+                        int takeRow = (piece.getPosition().getRow() + to.getRow()) / 2;
+                        int takeCol = (piece.getPosition().getCol() + to.getCol()) / 2;
+                        newPieces.remove(CheckersHelper.pieceAt(pieces, takeRow, takeCol));
+                        takeWasMaden = true;
+                        takenPiece = piece;
+                        break;
+                    }
+                }
+                if (piece.getPieceRank() == PieceRank.KING) {
+                    if (CheckersHelper.isKingTakeMove(pieces, piece, to)) {
+                        piece.setPosition(to);
+                        int takeRow = to.getRow() - (to.getRow() - piece.getPosition().getRow() > 0 ? 1 : -1);
+                        int takeCol = to.getCol() - (to.getCol() - piece.getPosition().getCol() > 0 ? 1 : -1);
+                        newPieces.remove(CheckersHelper.pieceAt(pieces, takeRow, takeCol));
+                        takeWasMaden = true;
+                        takenPiece = piece;
+                        break;
+                    }
+                }
                 piece.setPosition(to);
                 break;
+            }
+        }
+        int maxDepth = 3;
+        int depth = 0;
+        while (takeWasMaden && depth < maxDepth && !isGameOver(newPieces, takenPiece.getPlayer())) {
+            takeWasMaden = false;
+            ArrayList<BoardCell> takenMoves = generateTakeMovesForPiece(newPieces, takenPiece);
+            if (takenMoves.size() > 0) {
+                depth++;
+                BoardCell toTake = takenMoves.get(0);
+                if (takenPiece.getPieceRank() == PieceRank.PAWN) {
+                    if (CheckersHelper.isPawnTakeMove(newPieces, takenPiece, toTake)) {
+                        takenPiece.setPosition(toTake);
+                        int takeRow = (takenPiece.getPosition().getRow() + toTake.getRow()) / 2;
+                        int takeCol = (takenPiece.getPosition().getCol() + toTake.getCol()) / 2;
+                        newPieces.remove(CheckersHelper.pieceAt(newPieces, takeRow, takeCol));
+                        takeWasMaden = true;
+                    }
+                }
+                if (takenPiece.getPieceRank() == PieceRank.KING) {
+                    if (CheckersHelper.isKingTakeMove(newPieces, takenPiece, toTake)) {
+                        takenPiece.setPosition(toTake);
+                        int takeRow = toTake.getRow() - (toTake.getRow() - takenPiece.getPosition().getRow() > 0 ? 1 : -1);
+                        int takeCol = toTake.getCol() - (toTake.getCol() - takenPiece.getPosition().getCol() > 0 ? 1 : -1);
+                        newPieces.remove(CheckersHelper.pieceAt(newPieces, takeRow, takeCol));
+                        takeWasMaden = true;
+                    }
+                }
             }
         }
         return newPieces;

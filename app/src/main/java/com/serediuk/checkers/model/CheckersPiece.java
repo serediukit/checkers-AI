@@ -1,5 +1,7 @@
 package com.serediuk.checkers.model;
 
+import androidx.annotation.NonNull;
+
 import com.serediuk.checkers.enums.PieceRank;
 import com.serediuk.checkers.enums.Player;
 
@@ -85,5 +87,11 @@ public class CheckersPiece {
             }
         }
         return moves;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return position.getRow() + " " + position.getCol();
     }
 }

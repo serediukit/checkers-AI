@@ -106,6 +106,14 @@ public class LocalGameActivity extends AppCompatActivity implements CheckersDele
 
     public void startGame(View view) {
         checkersModel.changeTurn();
+        playerWhite = !playerWhite;
+        if (playerWhite) {
+            playerImageView.setImageBitmap(blackIcon);
+            opponentImageView.setImageBitmap(whiteIcon);
+        } else {
+            playerImageView.setImageBitmap(whiteIcon);
+            opponentImageView.setImageBitmap(blackIcon);
+        }
         LinearLayout finishLayout = findViewById(R.id.finish_layout);
         finishLayout.setVisibility(View.INVISIBLE);
         Button buttonChange = findViewById(R.id.btn_change_turn);
