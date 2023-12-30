@@ -1,5 +1,6 @@
 package com.serediuk.checkers.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -32,6 +33,7 @@ public class PuzzleView extends CheckersView {
         drawPieces(canvas);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event == null)

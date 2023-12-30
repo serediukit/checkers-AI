@@ -21,8 +21,8 @@ import com.serediuk.checkers.util.CheckersDelegate;
 import java.util.*;
 
 public class CheckersView extends View {
-    protected final int ROW = 8;
-    protected final int COL = 8;
+    protected static final int ROW = 8;
+    protected static final int COL = 8;
     private final int LIGHT_COLOR = Color.parseColor("#c2b48d");
     private final int DARK_COLOR = Color.parseColor("#292314");
     private final int MOVES_COLOR = Color.parseColor("#fcba03");
