@@ -76,6 +76,8 @@ public class CheckersHelper {
     }
 
     public static boolean isPawnMove(ArrayList<CheckersPiece> pieces, CheckersPiece piece, BoardCell move, Player playerTurn) {
+        if (pieceAt(pieces, move) != null)
+            return false;
         if (playerTurn == piece.getPlayer())
             return move.getRow() - piece.getPosition().getRow() == -1 && Math.abs(move.getCol() - piece.getPosition().getCol()) == 1;
         else
