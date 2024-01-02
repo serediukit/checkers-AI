@@ -24,7 +24,7 @@ public class CheckersView extends View {
     protected static final int ROW = 8;
     protected static final int COL = 8;
     private final int LIGHT_COLOR = Color.parseColor("#c2b48d");
-    private final int DARK_COLOR = Color.parseColor("#292314");
+    private final int DARK_COLOR = Color.parseColor("#8a501d");
     private final int MOVES_COLOR = Color.parseColor("#fcba03");
     private final int TAKE_COLOR = Color.parseColor("#a83720");
     private final int LAST_MOVE_COLOR = Color.parseColor("#184f26");
