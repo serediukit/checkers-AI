@@ -39,7 +39,7 @@ public class AlphaBetaPruningBot implements Bot {
 
     private int[] alphaBeta(ArrayList<CheckersPiece> pieces, Player turn, int alpha, int beta, int depth) {
         if (depth == MAX_DEPTH || isGameOver(pieces, turn)) {
-            int evaluation = evaluatePosition(pieces, turn);
+            int evaluation = evaluatePosition(pieces);
             return new int[]{evaluation, -1, -1};
         }
 
@@ -55,8 +55,8 @@ public class AlphaBetaPruningBot implements Bot {
             for (Pair<BoardCell, BoardCell> move : availableMoves) {
                 BoardCell from = move.first;
                 BoardCell to = move.second;
-                ArrayList<CheckersPiece> updatedPieces = makeMove(pieces, from, to);
-                int eval = alphaBeta(updatedPieces, botTurn == Player.WHITE ? Player.BLACK : Player.WHITE, alpha, beta, depth + 1)[0];
+                ArrayList<CheckersPiece> updatedPieces = new ArrayList<>(makeMove(pieces, from, to));
+                int eval = alphaBeta(updatedPieces, turn == Player.WHITE ? Player.BLACK : Player.WHITE, alpha, beta, depth + 1)[0];
 
                 if (eval > maxEval) {
                     maxEval = eval;
@@ -64,6 +64,15 @@ public class AlphaBetaPruningBot implements Bot {
                     bestMoveColFrom = from.getCol();
                     bestMoveRowTo = to.getRow();
                     bestMoveColTo = to.getCol();
+                }
+                if (eval == maxEval) {
+                    double rnd = Math.random();
+                    if (rnd <= 0.2) {
+                        bestMoveRowFrom = from.getRow();
+                        bestMoveColFrom = from.getCol();
+                        bestMoveRowTo = to.getRow();
+                        bestMoveColTo = to.getCol();
+                    }
                 }
 
                 alpha = Math.max(alpha, eval);
@@ -76,8 +85,8 @@ public class AlphaBetaPruningBot implements Bot {
             for (Pair<BoardCell, BoardCell> move : availableMoves) {
                 BoardCell from = move.first;
                 BoardCell to = move.second;
-                ArrayList<CheckersPiece> updatedPieces = makeMove(pieces, from, to);
-                int eval = alphaBeta(updatedPieces, botTurn == Player.WHITE ? Player.BLACK : Player.WHITE, alpha, beta, depth + 1)[0];
+                ArrayList<CheckersPiece> updatedPieces = new ArrayList<>(makeMove(pieces, from, to));
+                int eval = alphaBeta(updatedPieces, turn == Player.WHITE ? Player.BLACK : Player.WHITE, alpha, beta, depth + 1)[0];
 
                 if (eval < minEval) {
                     minEval = eval;
@@ -85,6 +94,15 @@ public class AlphaBetaPruningBot implements Bot {
                     bestMoveColFrom = from.getCol();
                     bestMoveRowTo = to.getRow();
                     bestMoveColTo = to.getCol();
+                }
+                if (eval == minEval) {
+                    double rnd = Math.random();
+                    if (rnd <= 0.2) {
+                        bestMoveRowFrom = from.getRow();
+                        bestMoveColFrom = from.getCol();
+                        bestMoveRowTo = to.getRow();
+                        bestMoveColTo = to.getCol();
+                    }
                 }
 
                 beta = Math.min(beta, eval);
@@ -225,26 +243,28 @@ public class AlphaBetaPruningBot implements Bot {
         return piece.getPosition().getRow() == cell.getRow() && piece.getPosition().getCol() == cell.getCol();
     }
 
-    public int evaluatePosition(ArrayList<CheckersPiece> pieces, Player turn) {
-        if (getBlackCount(pieces) == 0 && turn == Player.WHITE)
+    public int evaluatePosition(ArrayList<CheckersPiece> pieces) {
+        if (getBlackCount(pieces) == 0 && botTurn == Player.WHITE)
             return Integer.MAX_VALUE;
-        else if (getBlackCount(pieces) == 0 && turn == Player.BLACK)
+        else if (getBlackCount(pieces) == 0 && botTurn == Player.BLACK)
             return Integer.MIN_VALUE;
-        else if (getWhiteCount(pieces) == 0 && turn == Player.WHITE)
+        else if (getWhiteCount(pieces) == 0 && botTurn == Player.WHITE)
             return Integer.MIN_VALUE;
-        else if (getWhiteCount(pieces) == 0 && turn == Player.BLACK)
+        else if (getWhiteCount(pieces) == 0 && botTurn == Player.BLACK)
             return Integer.MAX_VALUE;
-        else if (isTie(pieces, turn))
+        else if (isTie(pieces, botTurn) || isTie(pieces, botTurn == Player.WHITE ? Player.BLACK : Player.WHITE))
             return 0;
         int eval = 0;
         for (CheckersPiece piece : pieces) {
-            int weight = 1;
+            int weight = generateTakeMovesForPiece(pieces, piece).size();
+            if (weight == 0)
+                weight = generateJustMovesForPiece(pieces, piece, piece.getPlayer()).size();
             if (piece.getPieceRank() == PieceRank.KING)
-                weight = 7;
-            if (piece.getPlayer() == turn)
-                eval += weight;
+                weight *= 4;
+            if (piece.getPlayer() == botTurn)
+                eval += weight + 1;
             else
-                eval -= weight;
+                eval -= weight + 1;
         }
         return eval;
     }
