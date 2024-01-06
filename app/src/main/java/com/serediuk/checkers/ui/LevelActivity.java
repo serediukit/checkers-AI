@@ -62,6 +62,16 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
     }
 
     @Override
+    public ArrayList<BoardCell> getTakenPieces() {
+        return puzzleModel.getTakenPieces();
+    }
+
+    @Override
+    public ArrayList<BoardCell> getLastMoves() {
+        return puzzleModel.getLastMoves();
+    }
+
+    @Override
     public boolean checkMove(BoardCell from, BoardCell to) {
         if (pieceAt(from).getPlayer() != turn)
             return false;
@@ -95,33 +105,41 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
             )
                 return false;
 
-        Log.d("FROM", from.getRow() + " " + from.getCol());
-        Log.d("TO", to.getRow() + " " + to.getCol());
+        if (correctMoves.size() > 0) {
+            BoardCell fromCorrect = correctMoves.get(0).first;
+            BoardCell toCorrect = correctMoves.get(0).second;
 
-        LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
-        TextView resultTitle = findViewById(R.id.puzzle_result_title);
-        TextView resultUndertitle = findViewById(R.id.puzzle_result_undertitle);
-        Button nextButton = findViewById(R.id.btn_puzzle_next_level);
-        resultLayout.setVisibility(View.VISIBLE);
-
-        for (Pair<BoardCell, BoardCell> move : correctMoves) {
-            BoardCell fromCorrect = move.first;
-            BoardCell toCorrect = move.second;
+            LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
+            TextView resultTitle = findViewById(R.id.puzzle_result_title);
+            TextView resultUndertitle = findViewById(R.id.puzzle_result_undertitle);
+            Button nextButton = findViewById(R.id.btn_puzzle_next_level);
 
             if (from.getRow() == fromCorrect.getRow()
                     && from.getCol() == fromCorrect.getCol()
                     && to.getRow() == toCorrect.getRow()
                     && to.getCol() == toCorrect.getCol()
             ) {
-                resultTitle.setText(R.string.win);
-                resultUndertitle.setText(R.string.win_move);
-                nextButton.setVisibility(View.VISIBLE);
+                puzzleModel.movePiece(from, to);
+                correctMoves.remove(0);
+                if (correctMoves.size() != 0)
+                    turn = pieceAt(correctMoves.get(0).first).getPlayer();
+                if (correctMoves.size() == 0) {
+                    resultLayout.setVisibility(View.VISIBLE);
+                    resultTitle.setText(R.string.win);
+                    resultUndertitle.setText(R.string.win_move);
+                    nextButton.setVisibility(View.VISIBLE);
+                    puzzleView.invalidate();
+                }
                 return true;
+            } else {
+                resultLayout.setVisibility(View.VISIBLE);
+                resultTitle.setText(R.string.lose);
+                resultUndertitle.setText(R.string.lose_move);
+                nextButton.setVisibility(View.INVISIBLE);
+                puzzleView.invalidate();
+                return false;
             }
         }
-        resultTitle.setText(R.string.lose);
-        resultUndertitle.setText(R.string.lose_move);
-        nextButton.setVisibility(View.INVISIBLE);
         return false;
     }
 
@@ -134,7 +152,9 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
         LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
         resultLayout.setVisibility(View.INVISIBLE);
         levelNumber = LevelLoader.getLevelNumber();
-        puzzleModel = new PuzzleModel(levelNumber, turn);
+        puzzleModel = new PuzzleModel(levelNumber, Player.WHITE);
+        correctMoves = LevelLoader.getCorrectMoves();
+        puzzleView.invalidate();
     }
 
     public void nextLevel(View view) {

@@ -22,8 +22,8 @@ public class CheckersModel {
     protected ArrayList<CheckersPiece> pieces;
     protected ArrayList<BoardCell> takenPieces;
     protected ArrayList<BoardCell> lastMoves;
-    private CheckersPiece lastMovingPiece = null;
-    private boolean lastMoveWasTake = false;
+    protected CheckersPiece lastMovingPiece = null;
+    protected boolean lastMoveWasTake = false;
 
     protected Player turn;
 
@@ -99,6 +99,7 @@ public class CheckersModel {
     }
 
     public boolean movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        Log.d("MOVE", "1");
         if ((toRow + toCol) % 2 == 0)
             return false;
         CheckersPiece pieceToMove = pieceAt(fromRow, fromCol);
@@ -150,6 +151,7 @@ public class CheckersModel {
     }
 
     private boolean makeTakenMove(CheckersPiece piece, int toRow, int toCol) {
+        Log.d("MOVE", "2");
         ArrayList<BoardCell> movesToTake = getMovesToTake(piece);
         if (movesToTake == null || movesToTake.size() == 0)
             return false;
@@ -170,6 +172,7 @@ public class CheckersModel {
                     lastMoveWasTake = true;
                     lastMovingPiece = piece;
                     move(piece, toRow, toCol);
+                    Log.d("MOVE", "3");
                     return true;
                 }
             }

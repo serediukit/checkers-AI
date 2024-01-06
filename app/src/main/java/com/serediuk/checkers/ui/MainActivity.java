@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         LevelLoader.preferences = getSharedPreferences("levels", Context.MODE_PRIVATE);
         StatisticLoader.preferences = getSharedPreferences("statistic", Context.MODE_PRIVATE);
-        boolean needToReloadPreferences = false;
+        boolean needToReloadPreferences = true;
         if (StatisticLoader.getLevelCount() == 0 || needToReloadPreferences) {
             StatisticLoader.setLevel(1);
             StatisticLoader.setLevelCount(3);

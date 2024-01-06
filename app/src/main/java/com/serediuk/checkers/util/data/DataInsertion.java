@@ -30,7 +30,8 @@ public class DataInsertion {
         pieces.add(new CheckersPiece(new BoardCell(4, 1), Player.BLACK, PieceRank.KING));
         pieces.add(new CheckersPiece(new BoardCell(6, 1), Player.BLACK, PieceRank.PAWN));
         ArrayList<Pair<BoardCell, BoardCell>> correctMoves = new ArrayList<>();
-        correctMoves.add(new Pair<>(new BoardCell(5, 0), new BoardCell(3, 2)));
+        correctMoves.add(new Pair<>(new BoardCell(7, 0), new BoardCell(5, 2)));
+        correctMoves.add(new Pair<>(new BoardCell(5, 2), new BoardCell(3, 0)));
         return new LevelData(levelNumber, pieces, correctMoves);
     }
 
