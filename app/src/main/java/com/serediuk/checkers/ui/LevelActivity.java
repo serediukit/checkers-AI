@@ -121,8 +121,19 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
             ) {
                 puzzleModel.movePiece(from, to);
                 correctMoves.remove(0);
-                if (correctMoves.size() != 0)
+                if (correctMoves.size() > 0) {
                     turn = pieceAt(correctMoves.get(0).first).getPlayer();
+                    while (turn == Player.BLACK && correctMoves.size() > 0) {
+                        BoardCell opponentFromCorrect = correctMoves.get(0).first;
+                        BoardCell opponentToCorrect = correctMoves.get(0).second;
+
+                        puzzleModel.movePiece(opponentFromCorrect, opponentToCorrect);
+                        correctMoves.remove(0);
+                        if (correctMoves.size() > 0)
+                            turn = pieceAt(correctMoves.get(0).first).getPlayer();
+                    }
+                }
+
                 if (correctMoves.size() == 0) {
                     resultLayout.setVisibility(View.VISIBLE);
                     resultTitle.setText(R.string.win);

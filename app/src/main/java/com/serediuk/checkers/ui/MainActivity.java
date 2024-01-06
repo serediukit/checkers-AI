@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         boolean needToReloadPreferences = true;
         if (StatisticLoader.getLevelCount() == 0 || needToReloadPreferences) {
             StatisticLoader.setLevel(1);
-            StatisticLoader.setLevelCount(3);
+            StatisticLoader.setLevelCount(4);
             StatisticLoader.setGamesCount(0);
             StatisticLoader.setWins(0);
             StatisticLoader.setLoses(0);
