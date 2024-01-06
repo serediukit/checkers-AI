@@ -113,6 +113,7 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
             TextView resultTitle = findViewById(R.id.puzzle_result_title);
             TextView resultUndertitle = findViewById(R.id.puzzle_result_undertitle);
             Button nextButton = findViewById(R.id.btn_puzzle_next_level);
+            Button restartButtonBottom = findViewById(R.id.btn_puzzle_restart);
 
             if (from.getRow() == fromCorrect.getRow()
                     && from.getCol() == fromCorrect.getCol()
@@ -136,6 +137,7 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
 
                 if (correctMoves.size() == 0) {
                     resultLayout.setVisibility(View.VISIBLE);
+                    restartButtonBottom.setVisibility(View.INVISIBLE);
                     resultTitle.setText(R.string.win);
                     resultUndertitle.setText(R.string.win_move);
                     nextButton.setVisibility(View.VISIBLE);
@@ -144,6 +146,7 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
                 return true;
             } else {
                 resultLayout.setVisibility(View.VISIBLE);
+                restartButtonBottom.setVisibility(View.INVISIBLE);
                 resultTitle.setText(R.string.lose);
                 resultUndertitle.setText(R.string.lose_move);
                 nextButton.setVisibility(View.INVISIBLE);
@@ -162,6 +165,7 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
     public void restartLevel(View view) {
         LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
         resultLayout.setVisibility(View.INVISIBLE);
+        (findViewById(R.id.btn_puzzle_restart)).setVisibility(View.VISIBLE);
         levelNumber = LevelLoader.getLevelNumber();
         puzzleModel = new PuzzleModel(levelNumber, Player.WHITE);
         correctMoves = LevelLoader.getCorrectMoves();
@@ -180,6 +184,7 @@ public class LevelActivity extends AppCompatActivity implements PuzzleDelegate {
             String titleString = (String) title.getText();
             title.setText(titleString + " " + levelNumber);
             LinearLayout resultLayout = findViewById(R.id.puzzle_result_layout);
+            (findViewById(R.id.btn_puzzle_restart)).setVisibility(View.VISIBLE);
             resultLayout.setVisibility(View.INVISIBLE);
         } else {
             Intent intent = new Intent(this, MainActivity.class);
