@@ -26,6 +26,8 @@ public class PuzzleView extends CheckersView {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        takenPieces = puzzleDelegate.getTakenPieces();
+        lastMoves = puzzleDelegate.getLastMoves();
         double boardSize = Math.min(getWidth(), getHeight());
         cellSize = (int) (boardSize / 8);
         cellSpace = cellSize / 10;

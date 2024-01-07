@@ -41,8 +41,8 @@ public class CheckersView extends View {
     protected Bitmap movingBitmap = null;
     protected CheckersPiece movingPiece = null;
     protected ArrayList<BoardCell> correctMoves = null;
-    private ArrayList<BoardCell> takenPieces = null;
-    private ArrayList<BoardCell> lastMoves = null;
+    protected ArrayList<BoardCell> takenPieces = null;
+    protected ArrayList<BoardCell> lastMoves = null;
 
     private CheckersDelegate checkersDelegate = null;
 

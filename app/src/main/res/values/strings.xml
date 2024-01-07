@@ -36,7 +36,7 @@
     <string name="text_warning">Попередження</string>
     <string name="text_changing">Ви точно хочете змінити сторону? Ця гра буде врахована як програна.</string>
     <string name="text_restarting">Ви точно хочете почати спочатку? Ця гра буде врахована як програна.</string>
-    <string name="text_level_description">Зробіть правильний хід</string>
+    <string name="text_level_description">Зробіть правильний хід за білих</string>
     <string name="text_statistic_cleared">Статистику очищенно</string>
 
     <string name="statistic_text_levels_count">Пройдено рівнів</string>
