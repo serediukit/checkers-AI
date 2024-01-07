@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         LevelLoader.preferences = getSharedPreferences("levels", Context.MODE_PRIVATE);
         StatisticLoader.preferences = getSharedPreferences("statistic", Context.MODE_PRIVATE);
-        boolean needToReloadPreferences = true;
+        boolean needToReloadPreferences = false;
         if (StatisticLoader.getLevelCount() == 0 || needToReloadPreferences) {
-            StatisticLoader.setLevel(8);
-            StatisticLoader.setLevelCount(9);
+            StatisticLoader.setLevel(1);
+            StatisticLoader.setLevelCount(10);
             StatisticLoader.setGamesCount(0);
             StatisticLoader.setWins(0);
             StatisticLoader.setLoses(0);

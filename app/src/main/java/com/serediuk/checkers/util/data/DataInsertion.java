@@ -29,8 +29,8 @@ public class DataInsertion {
                 return get8();
             case 9:
                 return get9();
-//            case 10:
-//                return get10();
+            case 10:
+                return get10();
             default:
                 return null;
         }
@@ -209,6 +209,32 @@ public class DataInsertion {
 
     private static LevelData get9() {
         int levelNumber = 9;
+        ArrayList<CheckersPiece> pieces = new ArrayList<>();
+        pieces.add(new CheckersPiece(new BoardCell(6, 5), Player.WHITE, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(7, 0), Player.WHITE, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(7, 2), Player.WHITE, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(7, 4), Player.WHITE, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(7, 6), Player.WHITE, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(1, 2), Player.BLACK, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(1, 4), Player.BLACK, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(2, 1), Player.BLACK, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(2, 3), Player.BLACK, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(2, 7), Player.BLACK, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(3, 4), Player.BLACK, PieceRank.PAWN));
+        pieces.add(new CheckersPiece(new BoardCell(5, 0), Player.BLACK, PieceRank.PAWN));
+        ArrayList<Pair<BoardCell, BoardCell>> correctMoves = new ArrayList<>();
+        correctMoves.add(new Pair<>(new BoardCell(7, 2), new BoardCell(6, 1)));
+        correctMoves.add(new Pair<>(new BoardCell(5, 0), new BoardCell(7, 2)));
+        correctMoves.add(new Pair<>(new BoardCell(7, 4), new BoardCell(6, 3)));
+        correctMoves.add(new Pair<>(new BoardCell(7, 2), new BoardCell(5, 4)));
+        correctMoves.add(new Pair<>(new BoardCell(6, 5), new BoardCell(4, 3)));
+        correctMoves.add(new Pair<>(new BoardCell(4, 3), new BoardCell(2, 5)));
+        correctMoves.add(new Pair<>(new BoardCell(2, 5), new BoardCell(0, 3)));
+        return new LevelData(levelNumber, pieces, correctMoves);
+    }
+
+    private static LevelData get10() {
+        int levelNumber = 10;
         ArrayList<CheckersPiece> pieces = new ArrayList<>();
         pieces.add(new CheckersPiece(new BoardCell(2, 1), Player.WHITE, PieceRank.PAWN));
         pieces.add(new CheckersPiece(new BoardCell(3, 0), Player.WHITE, PieceRank.PAWN));
